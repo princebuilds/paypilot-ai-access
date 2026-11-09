@@ -1,6 +1,20 @@
 import pytest
 import respx
 
+from app.config import get_settings
+from app.database import init_db
+
+
+@pytest.fixture(autouse=True)
+def isolate_database_for_tests(tmp_path, monkeypatch):
+    """Ensure non-live tests never write to the root paypilot.db."""
+    test_db = str(tmp_path / "test_isolated.db")
+    monkeypatch.setenv("DATABASE_PATH", test_db)
+    get_settings.cache_clear()
+    init_db(test_db)
+    yield test_db
+    get_settings.cache_clear()
+
 
 @pytest.fixture(autouse=True)
 def block_external_network(request):

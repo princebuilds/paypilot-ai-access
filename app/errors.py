@@ -50,6 +50,16 @@ class RateLimitedError(AppError):
         )
 
 
+class UpstreamServiceError(AppError):
+    def __init__(self, message: str = "The product service is not responding. Please try again."):
+        super().__init__(
+            code="UPSTREAM_ERROR",
+            message=message,
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            retryable=True,
+        )
+
+
 class NotImplementedFeatureError(AppError):
     def __init__(self, message: str = "This feature is not implemented yet."):
         super().__init__(
