@@ -27,10 +27,24 @@
 - Gate status: **GREEN** (pytest exits 0, static_checks exits 0 with 18 passes, ruff exits 0).
 - Evidence saved: `docs/evidence/phaseB0_bootstrap.txt`.
 
+## Phase B1: Platform core (Done)
+- Built `app/config.py`: typed settings with fail-fast validation naming missing variables without printing secret values; `OFFLINE_TESTS` handling.
+- Built `app/database.py`: SQLite3 with WAL mode and schema DDL creating `searches`, `product_snapshots`, `quotes`, `orders`, and `payment_events`.
+- Built `app/schemas.py`: Pydantic models for error envelopes, health, agent, quotes, and orders endpoints.
+- Built `app/errors.py`: `AppError` hierarchy, standardized JSON response handlers for application errors, validation errors, and safe 500s.
+- Built `app/security.py`: `sid` cookie lifecycle (HttpOnly, SameSite=Lax, Secure over HTTPS), per-IP hourly rate limiter and global daily search cap.
+- Built `app/routers/health.py`: `/api/health` returning operational status booleans and safe metadata only.
+- Built stub routers (`app/routers/agent.py`, `app/routers/quotes.py`, `app/routers/orders.py`) returning `NOT_IMPLEMENTED`.
+- Mounted `static/` at `/` in `app/main.py`.
+- Unit tests added: `tests/unit/test_config.py`, `tests/unit/test_security.py`.
+- Integration tests added: `test_matrix_08_session_isolation.py`, `test_matrix_09_rate_limit.py`, `test_matrix_13_startup_model_health.py`, `test_matrix_16_secret_leakage.py`.
+- Gate status: **GREEN** (pytest: 13 passed, static_checks: 18 pass, ruff: all passed).
+- Evidence saved: `docs/evidence/phaseB1_platform_core.txt`.
+
 ## Current Status
-- **Current Phase:** HUMAN STEP F (Push to GitHub) -> Phase B1 (Platform core)
+- **Current Phase:** HUMAN STEP A (Create .env) -> Phase B2 (Real Channel3 integration)
 - **Gate Status:**
-  - `pytest -q`: PASS (1 passed)
+  - `pytest -m 'not live'`: PASS (13 passed in 0.77s)
   - `python scripts/static_checks.py`: PASS (18 pass, 0 warn, 0 fail)
   - `ruff check .`: PASS (All checks passed)
 

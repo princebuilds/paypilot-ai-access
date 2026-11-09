@@ -1,0 +1,53 @@
+Phase B1 Platform Core Gate Verification Evidence
+Date: 2026-11-09T22:42:34+05:30
+Repository: princebuilds/paypilot-ai-access
+
+Command: .\.venv\Scripts\python.exe -m pytest
+Exit Code: 0
+Output:
+============================= test session starts =============================
+platform win32 -- Python 3.13.15, pytest-9.2.0, pluggy-1.7.0
+rootdir: C:\PAYPAL
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0, respx-0.23.1
+collected 13 items
+
+tests\integration\test_matrix_08_session_isolation.py ..                 [ 15%]
+tests\integration\test_matrix_09_rate_limit.py .                         [ 23%]
+tests\integration\test_matrix_13_startup_model_health.py ..              [ 38%]
+tests\integration\test_matrix_16_secret_leakage.py .                     [ 46%]
+tests\unit\test_config.py ...                                            [ 69%]
+tests\unit\test_sanity.py .                                              [ 76%]
+tests\unit\test_security.py ...                                          [100%]
+
+============================= 13 passed in 0.77s ==============================
+
+Command: .\.venv\Scripts\python.exe scripts/static_checks.py
+Exit Code: 0
+Output:
+[PASS] required files exist
+[PASS] .gitignore covers .env and *.db
+[PASS] .env and *.db not tracked by git
+[PASS] no secret-looking strings in tracked-style files (local .env is checked separately)
+[PASS] no secret-looking strings in git history
+[PASS] no innerHTML / insertAdjacentHTML / document.write in static/
+[PASS] no hard-coded Gemini model IDs in app/
+[PASS] no production PayPal host literal
+[PASS] no disabled TLS verification
+[PASS] frontend does not send price/amount/total in order or capture calls
+[PASS] no printing or logging of key variables
+[PASS] seeded catalogue not imported outside tests or offline flag
+[PASS] dependencies are allowed or justified in docs/DECISIONS.md
+[PASS] README has required sections
+[PASS] frontend shows Sandbox wording
+[PASS] evidence file docs/FINAL_VERIFICATION.md exists
+[PASS] evidence file docs/LIVE_TEST_REPORT.md exists
+[PASS] evidence file docs/ACCESSIBILITY_TEST.md exists
+
+18 checks: 18 pass, 0 warn, 0 fail
+
+Command: .\.venv\Scripts\ruff.exe check .
+Exit Code: 0
+Output:
+All checks passed!
