@@ -1,0 +1,45 @@
+Phase B0 Bootstrap Gate Verification Evidence
+Date: 2026-11-09T14:01:20+05:30
+Repository: princebuilds/paypilot-ai-access
+Commit: f355aaa (docs: add agent instructions)
+
+Command: .\.venv\Scripts\python.exe -m pytest -q
+Exit Code: 0
+Output:
+.                                                                        [100%]
+1 passed in 0.22s
+
+Command: .\.venv\Scripts\python.exe scripts/static_checks.py
+Exit Code: 0
+Output:
+[PASS] required files exist
+[PASS] .gitignore covers .env and *.db
+[PASS] .env and *.db not tracked by git
+[PASS] no secret-looking strings in tracked-style files (local .env is checked separately)
+[PASS] no secret-looking strings in git history
+[PASS] no innerHTML / insertAdjacentHTML / document.write in static/
+[PASS] no hard-coded Gemini model IDs in app/
+[PASS] no production PayPal host literal
+[PASS] no disabled TLS verification
+[PASS] frontend does not send price/amount/total in order or capture calls
+[PASS] no printing or logging of key variables
+[PASS] seeded catalogue not imported outside tests or offline flag
+[PASS] dependencies are allowed or justified in docs/DECISIONS.md
+[PASS] README has required sections
+[PASS] frontend shows Sandbox wording
+[PASS] evidence file docs/FINAL_VERIFICATION.md exists
+[PASS] evidence file docs/LIVE_TEST_REPORT.md exists
+[PASS] evidence file docs/ACCESSIBILITY_TEST.md exists
+
+18 checks: 18 pass, 0 warn, 0 fail
+
+Command: .\.venv\Scripts\ruff.exe check .
+Exit Code: 0
+Output:
+All checks passed!
+
+Command: git log --oneline
+Exit Code: 0
+Output:
+f355aaa docs: add agent instructions
+8d65a4c chore: initialize project scaffold
