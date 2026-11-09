@@ -1,0 +1,26 @@
+/* PayPilot AI ACCESS Base Styles */
+:root {
+  --primary-color: #003087;
+  --focus-outline: #0070ba;
+  --bg-color: #ffffff;
+  --text-color: #0c0c0d;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 1rem;
+}
+
+.sandbox-banner {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ffeeba;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem;
+}

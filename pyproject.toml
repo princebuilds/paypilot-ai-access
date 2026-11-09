@@ -1,0 +1,19 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q -m 'not live'"
+markers = [
+    "live: calls real external services and needs keys",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+exclude = [
+    "_local",
+    ".venv",
+    "scripts",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]

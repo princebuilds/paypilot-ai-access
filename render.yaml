@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: paypilot-ai-access
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: false
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.15
+      - key: PAYPAL_ENV
+        value: sandbox
+      - key: OFFLINE_TESTS
+        value: "0"
+      - key: RATE_LIMIT_PER_HOUR
+        value: "30"
+      - key: DAILY_SEARCH_CAP
+        value: "1500"
+      - key: CHANNEL3_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        sync: false
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
