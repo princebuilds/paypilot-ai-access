@@ -1,6 +1,6 @@
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q -m 'not live'"
+addopts = "-m 'not live'"
 markers = [
     "live: calls real external services and needs keys",
 ]

@@ -21,8 +21,9 @@
 - Dependencies installed and pinned in `requirements.txt` and `requirements-dev.txt`. Transitive dependencies documented in `docs/DECISIONS.md`.
 - `pyproject.toml` configured with pytest options and ruff rules.
 - Superseded documents moved to `_local/`.
-- Commit 1 made: `chore: initialize project scaffold` (8d65a4c).
-- Commit 2 made: `docs: add agent instructions` (f355aaa).
+- Commit 1 made: `chore: initialize project scaffold` (originally 8d65a4c, rewritten to 29e26a0 for GitHub no-reply email).
+- Commit 2 made: `docs: add agent instructions` (originally f355aaa, rewritten to c95fb46 for GitHub no-reply email).
+- Evidence record commit: originally 696c537, rewritten to 04a6251. Note: `docs/evidence/phaseB0_bootstrap.txt` records original command run timestamps/hashes and is preserved without modification.
 - Gate status: **GREEN** (pytest exits 0, static_checks exits 0 with 18 passes, ruff exits 0).
 - Evidence saved: `docs/evidence/phaseB0_bootstrap.txt`.
 
