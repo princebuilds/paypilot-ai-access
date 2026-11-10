@@ -8,7 +8,6 @@ Never prints or logs API keys or secrets.
 import argparse
 import datetime
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -16,8 +15,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-import httpx
-from app.config import get_settings
+import httpx  # noqa: E402
+
+from app.config import get_settings  # noqa: E402
 
 
 def sanitize_dict(obj):
@@ -81,7 +81,7 @@ def run_channel3_smoke_test():
         products = search_data.get("products") or []
         count = len(products)
         print(f"[PASS] Search HTTP 200 OK (latency: {latency:.2f}s, products found: {count})")
-        print(f"Saved fixture: tests/fixtures/channel3_search_real.json")
+        print("Saved fixture: tests/fixtures/channel3_search_real.json")
 
         if count == 0:
             print("[WARN] Search returned zero products; cannot test detail call.")
@@ -99,7 +99,7 @@ def run_channel3_smoke_test():
         avail_disp = first_offer.get("availability") or "Unknown"
         domain_disp = first_offer.get("domain") or "retailer.com"
 
-        print(f"\nFirst Product Overview:")
+        print("\nFirst Product Overview:")
         print(f"  ID:           {first_id}")
         print(f"  Title:        {first_title[:60]}")
         print(f"  Price:        {price_disp} {curr_disp}")
@@ -120,8 +120,8 @@ def run_channel3_smoke_test():
         (fixtures_dir / "channel3_product_real.json").write_text(
             json.dumps(sanitized_detail, indent=2), encoding="utf-8"
         )
-        print(f"[PASS] Detail HTTP 200 OK")
-        print(f"Saved fixture: tests/fixtures/channel3_product_real.json")
+        print("[PASS] Detail HTTP 200 OK")
+        print("Saved fixture: tests/fixtures/channel3_product_real.json")
 
         # Record in docs/LIVE_TEST_REPORT.md
         report_file = ROOT / "docs" / "LIVE_TEST_REPORT.md"
@@ -138,7 +138,7 @@ def run_channel3_smoke_test():
 """
         with open(report_file, "a", encoding="utf-8") as f:
             f.write(report_entry)
-        print(f"Updated live test report: docs/LIVE_TEST_REPORT.md\n")
+        print("Updated live test report: docs/LIVE_TEST_REPORT.md\n")
 
 
 def run_gemini_smoke_test():
@@ -227,10 +227,60 @@ def run_gemini_smoke_test():
 """
         with open(report_file, "a", encoding="utf-8") as f:
             f.write(report_entry)
-        print(f"Updated live test report: docs/LIVE_TEST_REPORT.md\n")
+        print("Updated live test report: docs/LIVE_TEST_REPORT.md\n")
 
     except Exception as e:
         print(f"[FAIL] Gemini call failed: {type(e).__name__}: {str(e)[:200]}")
+        sys.exit(1)
+
+
+def run_paypal_smoke_test():
+    """Execute live PayPal Sandbox create-order to confirm credentials and payload."""
+    settings = get_settings()
+    if not settings.PAYPAL_CLIENT_ID or not settings.PAYPAL_CLIENT_SECRET:
+        print("[ERROR] PAYPAL_CLIENT_ID or PAYPAL_CLIENT_SECRET not configured in .env")
+        sys.exit(1)
+
+    print("\n--- Live PayPal Sandbox Integration Test (Create-Order Only) ---")
+    print("Endpoint: https://api-m.sandbox.paypal.com/v2/checkout/orders")
+
+    from app.paypal import PayPalClient
+
+    paypal_client = PayPalClient(settings=settings)
+    test_internal_id = f"smoke_{datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d%H%M%S')}"
+    test_total = "39.99"
+
+    start_t = datetime.datetime.now(datetime.timezone.utc)
+    try:
+        paypal_order_id, debug_id = paypal_client.create_order(
+            order_id=test_internal_id,
+            total=test_total,
+            currency="USD",
+        )
+        latency = (datetime.datetime.now(datetime.timezone.utc) - start_t).total_seconds()
+        print(f"[PASS] PayPal Order Created successfully (latency: {latency:.2f}s)")
+        print(f"  Internal Order ID: {test_internal_id}")
+        print(f"  PayPal Order ID:   {paypal_order_id}")
+        print(f"  PayPal Debug ID:   {debug_id}")
+        print("  Status:            CREATED (Sandbox create-only verified)")
+
+        report_file = ROOT / "docs" / "LIVE_TEST_REPORT.md"
+        now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        report_entry = f"""
+## PayPal Sandbox Live Create-Order Run ({now_iso})
+- **Status:** PASS (HTTP 201 Created)
+- **Internal Order ID:** `{test_internal_id}`
+- **PayPal Order ID:** `{paypal_order_id}`
+- **PayPal Debug ID:** `{debug_id}`
+- **Total Amount:** `$39.99 USD`
+- **Verification:** Sandbox credentials accepted, plain amount payload verified, no money spent.
+"""
+        with open(report_file, "a", encoding="utf-8") as f:
+            f.write(report_entry)
+        print("Updated live test report: docs/LIVE_TEST_REPORT.md\n")
+
+    except Exception as e:
+        print(f"[FAIL] PayPal create-order failed: {type(e).__name__}: {str(e)[:200]}")
         sys.exit(1)
 
 
@@ -245,6 +295,8 @@ def main():
         run_channel3_smoke_test()
     if args.gemini:
         run_gemini_smoke_test()
+    if args.paypal:
+        run_paypal_smoke_test()
     if not args.channel3 and not args.gemini and not args.paypal:
         run_channel3_smoke_test()
 
