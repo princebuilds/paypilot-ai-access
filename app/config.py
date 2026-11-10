@@ -58,6 +58,11 @@ class Settings(BaseSettings):
             if not is_configured_secret(val):
                 raise RuntimeError(f"Missing or placeholder environment variable: {name}")
 
+        if self.GEMINI_MODEL:
+            m = self.GEMINI_MODEL.strip().lower()
+            if "-preview" in m or m.endswith("-latest"):
+                raise RuntimeError(f"Configured GEMINI_MODEL must not be a preview or latest alias: {self.GEMINI_MODEL}")
+
         if self.PAYPAL_ENV.lower() != "sandbox":
             raise RuntimeError("PAYPAL_ENV must be 'sandbox'")
 

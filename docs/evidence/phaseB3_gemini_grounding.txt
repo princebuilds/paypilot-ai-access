@@ -1,0 +1,59 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.15, pytest-9.2.0, pluggy-1.7.0
+rootdir: C:\PAYPAL
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0, respx-0.23.1
+collected 55 items / 1 deselected / 54 selected
+
+tests\integration\test_channel3_mock.py ....                             [  7%]
+tests\integration\test_channel3_real_fixtures.py ..                      [ 11%]
+tests\integration\test_matrix_01_agent_grounding_db.py ..                [ 14%]
+tests\integration\test_matrix_02_agent_to_quote.py .                     [ 16%]
+tests\integration\test_matrix_08_session_isolation.py ..                 [ 20%]
+tests\integration\test_matrix_09_rate_limit.py .                         [ 22%]
+tests\integration\test_matrix_13_startup_model_health.py ........        [ 37%]
+tests\integration\test_matrix_16_secret_leakage.py .                     [ 38%]
+tests\integration\test_matrix_17_untrusted_text.py ...                   [ 44%]
+tests\unit\test_channel3_parser.py .........                             [ 61%]
+tests\unit\test_config.py .........                                      [ 77%]
+tests\unit\test_grounding.py ........                                    [ 92%]
+tests\unit\test_sanity.py .                                              [ 94%]
+tests\unit\test_security.py ...                                          [100%]
+
+====================== 54 passed, 1 deselected in 8.78s =======================
+
+--- STATIC CHECKS ---
+[PASS] required files exist                                                               
+[PASS] .gitignore covers .env and *.db                                                    
+[PASS] .env and *.db not tracked by git                                                   
+[PASS] no secret-looking strings in tracked-style files (local .env is checked separately)
+[PASS] no secret-looking strings in git history                                           
+[PASS] no innerHTML / insertAdjacentHTML / document.write in static/                      
+[PASS] no hard-coded Gemini model IDs in app/                                             
+[PASS] no production PayPal host literal                                                  
+[PASS] no disabled TLS verification                                                       
+[PASS] frontend does not send price/amount/total in order or capture calls                
+[PASS] no printing or logging of key variables                                            
+[PASS] seeded catalogue not imported outside tests or offline flag                        
+[PASS] dependencies are allowed or justified in docs/DECISIONS.md                         
+[PASS] README has required sections                                                       
+[PASS] frontend shows Sandbox wording                                                     
+[PASS] evidence file docs/FINAL_VERIFICATION.md exists                                    
+[PASS] evidence file docs/LIVE_TEST_REPORT.md exists                                      
+[PASS] evidence file docs/ACCESSIBILITY_TEST.md exists                                    
+
+18 checks: 18 pass, 0 warn, 0 fail
+
+--- RUFF LINT ---
+All checks passed!
+
+--- LIVE SMOKE TEST (GEMINI) ---
+
+--- Live Gemini Function Calling Integration Test ---
+Target Model: gemini-3.5-flash
+[PASS] Function call received (latency: 4.25s)
+  Tool Name: search_products
+  Arguments: {'max_price': 40, 'query': 'sturdy wooden walking stick'}
+Updated live test report: docs/LIVE_TEST_REPORT.md
+

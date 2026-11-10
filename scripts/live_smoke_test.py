@@ -141,6 +141,99 @@ def run_channel3_smoke_test():
         print(f"Updated live test report: docs/LIVE_TEST_REPORT.md\n")
 
 
+def run_gemini_smoke_test():
+    """Execute live Gemini function calling test and record in report."""
+    settings = get_settings()
+    api_key = settings.GEMINI_API_KEY
+    model_name = settings.GEMINI_MODEL
+
+    if not api_key:
+        print("[ERROR] GEMINI_API_KEY not configured in .env")
+        sys.exit(1)
+    if not model_name:
+        print("[ERROR] GEMINI_MODEL not configured in .env")
+        sys.exit(1)
+
+    print("\n--- Live Gemini Function Calling Integration Test ---")
+    print(f"Target Model: {model_name}")
+
+    from google import genai
+    from google.genai import types
+
+    client = genai.Client(api_key=api_key)
+
+    tool_def = types.Tool(
+        function_declarations=[
+            types.FunctionDeclaration(
+                name="search_products",
+                description="Search for products in catalog",
+                parameters=types.Schema(
+                    type="OBJECT",
+                    properties={
+                        "query": types.Schema(type="STRING", description="Search query terms"),
+                        "max_price": types.Schema(type="NUMBER", description="Maximum price in USD"),
+                    },
+                    required=["query"],
+                ),
+            )
+        ]
+    )
+
+    contents = [
+        types.Content(
+            role="user",
+            parts=[types.Part.from_text(text="User request: sturdy wooden walking stick. Budget: 40.00 USD.")],
+        )
+    ]
+
+    config = types.GenerateContentConfig(
+        system_instruction=(
+            "You are PayPilot, a shopping assistant for people who find online shopping hard. "
+            "If the product type or budget is missing, ask one short question. "
+            "When both product type and budget are present, call search_products."
+        ),
+        tools=[tool_def],
+        temperature=0.0,
+    )
+
+    start_t = datetime.datetime.now(datetime.timezone.utc)
+    try:
+        res = client.models.generate_content(
+            model=model_name,
+            contents=contents,
+            config=config,
+        )
+        latency = (datetime.datetime.now(datetime.timezone.utc) - start_t).total_seconds()
+        calls = getattr(res, "function_calls", None)
+
+        if not calls:
+            print(f"[FAIL] Model did not trigger function call. Returned text: {getattr(res, 'text', '')[:100]}")
+            sys.exit(1)
+
+        fc = calls[0]
+        print(f"[PASS] Function call received (latency: {latency:.2f}s)")
+        print(f"  Tool Name: {fc.name}")
+        print(f"  Arguments: {fc.args}")
+
+        report_file = ROOT / "docs" / "LIVE_TEST_REPORT.md"
+        now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        report_entry = f"""
+## Gemini Live Function-Calling Run ({now_iso})
+- **Status:** PASS
+- **Model ID:** {model_name}
+- **Latency:** {latency:.2f}s
+- **Tool Called:** `{fc.name}`
+- **Parsed Arguments:** `{json.dumps(fc.args)}`
+"""
+        with open(report_file, "a", encoding="utf-8") as f:
+            f.write(report_entry)
+        print(f"Updated live test report: docs/LIVE_TEST_REPORT.md\n")
+
+    except Exception as e:
+        print(f"[FAIL] Gemini call failed: {type(e).__name__}: {str(e)[:200]}")
+        sys.exit(1)
+
+
 def main():
     parser = argparse.ArgumentParser(description="PayPilot AI ACCESS Live Smoke Test")
     parser.add_argument("--channel3", action="store_true", help="Run Channel3 live verification")
@@ -148,7 +241,11 @@ def main():
     parser.add_argument("--paypal", action="store_true", help="Run PayPal live verification")
     args = parser.parse_args()
 
-    if args.channel3 or (not args.gemini and not args.paypal):
+    if args.channel3:
+        run_channel3_smoke_test()
+    if args.gemini:
+        run_gemini_smoke_test()
+    if not args.channel3 and not args.gemini and not args.paypal:
         run_channel3_smoke_test()
 
 

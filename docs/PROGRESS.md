@@ -53,10 +53,35 @@
 - Gate status: **GREEN** (pytest: 40 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed). Evidence saved in `docs/evidence/phaseB2_channel3.txt`.
 - Tag: `v0.1.0`.
 
+## Phase B3: Gemini Agent & Grounding (Done)
+- Probed Gemini models via `client.models.list()`. Older models (`gemini-2.5-*`) returned 404 retired for new users; selected and verified `gemini-3.5-flash` as active stable model with full function-calling support.
+- Pinned `GEMINI_MODEL=gemini-3.5-flash` in `.env.example` and `.env`; added startup validation rejecting `-preview` and `*-latest` aliases.
+- Evaluated unbranded alternatives for demo query 2 in `docs/DEMO_QUERIES.md`: replaced telephone query (AT&T, Panasonic trademark risk) with "jar opener for weak hands" ($25 budget).
+- Built `app/grounding.py`:
+  - Strict verbatim evidence matching across `title`, `description`, `key_features`, `materials`.
+  - Drops recommendations if model claims an absent feature (tested with "large buttons" on walking sticks).
+  - Drops recommendations with wrong price claims in reasons.
+  - Drops unknown product IDs not in the current search's stored snapshots.
+  - Safe reply text builder falling back to template sentence if summary mentions ungrounded prices.
+- Built `app/agent.py`:
+  - Manual function calling with single tool `search_products`.
+  - Delimiter protection wrapping untrusted product catalog text.
+  - Dependency-injectable `model_caller` for deterministic, zero-network unit/integration testing.
+  - Clarifying question handling when user request lacks budget or product type.
+- Activated `/api/agent` endpoint in `app/routers/agent.py`.
+- Added unit and integration test suites:
+  - `tests/unit/test_grounding.py` (8 unit tests)
+  - `tests/integration/test_matrix_01_agent_grounding_db.py` (Matrix Row 1)
+  - `tests/integration/test_matrix_02_agent_to_quote.py` (Matrix Row 2)
+  - `tests/integration/test_matrix_17_untrusted_text.py` (Matrix Row 17)
+- Live smoke test expanded in `scripts/live_smoke_test.py --gemini`: verified live tool call invocation against `gemini-3.5-flash` with recorded evidence in `docs/LIVE_TEST_REPORT.md`.
+- Gate status: **GREEN** (pytest: 54 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
+- Evidence saved: `docs/evidence/phaseB3_gemini_grounding.txt`.
+
 ## Current Status
-- **Current Phase:** Phase B3 (Gemini agent and grounding)
+- **Current Phase:** Phase B4 (Quotes, Budget Check, Confirmation)
 - **Gate Status:**
-  - `pytest -m 'not live'`: PASS (40 passed, 1 deselected)
+  - `pytest -m 'not live'`: PASS (54 passed, 1 deselected)
   - `python scripts/static_checks.py`: PASS (18 pass, 0 warn, 0 fail)
   - `ruff check .`: PASS (All checks passed)
 
@@ -65,23 +90,23 @@
 ### Cross-Check Matrix (Protocol Section 3)
 | Row | Interaction | Target Status | Evidence |
 |---|---|---|---|
-| 1 | Agent, grounding, database | NOT RUN | |
-| 2 | Agent to quote | NOT RUN | |
-| 3 | Quote, Channel3 refresh, currency | NOT RUN | |
-| 4 | Quote, budget, confirm | NOT RUN | |
+| 1 | Agent, grounding, database | PASS | `docs/evidence/phaseB3_gemini_grounding.txt` |
+| 2 | Agent to quote | PASS | `docs/evidence/phaseB3_gemini_grounding.txt` |
+| 3 | Quote, Channel3 refresh, currency | NOT RUN (Target: Phase B4) | |
+| 4 | Quote, budget, confirm | NOT RUN (Target: Phase B4) | |
 | 5 | Confirm to order | NOT RUN | |
 | 6 | Order to PayPal payload | NOT RUN | |
 | 7 | Capture, verification, receipt | NOT RUN | |
-| 8 | Session isolation | NOT RUN (Target: Phase B1) | |
-| 9 | Rate limit | NOT RUN (Target: Phase B1) | |
+| 8 | Session isolation | PASS | `docs/evidence/phaseB1_platform_core.txt` |
+| 9 | Rate limit | PASS | `docs/evidence/phaseB1_platform_core.txt` |
 | 10 | Frontend and API contract | NOT RUN | |
 | 11 | CSP, PayPal SDK, images | NOT RUN | |
 | 12 | Voice and keyboard fallback | NOT RUN | |
-| 13 | Startup, model pin, health | NOT RUN (Target: Phase B1) | |
+| 13 | Startup, model pin, health | PASS | `docs/evidence/phaseB1_platform_core.txt` |
 | 14 | Failure honesty | NOT RUN | |
 | 15 | Sandbox honesty | PASS (Static) | `docs/evidence/phaseB0_bootstrap.txt` |
-| 16 | Secret leakage | NOT RUN (Target: Phase B1) | |
-| 17 | Untrusted text | NOT RUN | |
+| 16 | Secret leakage | PASS | `docs/evidence/phaseB1_platform_core.txt` |
+| 17 | Untrusted text | PASS | `docs/evidence/phaseB3_gemini_grounding.txt` |
 | 18 | README reality | NOT RUN | |
 | 19 | Hosted parity | NOT RUN | |
 | 20 | Data persistence | NOT RUN | |

@@ -3,6 +3,14 @@ import respx
 
 from app.config import get_settings
 from app.database import init_db
+from app.main import app
+
+
+@pytest.fixture(autouse=True)
+def clean_dependency_overrides():
+    """Ensure FastAPI dependency overrides do not leak across tests."""
+    yield
+    app.dependency_overrides.clear()
 
 
 @pytest.fixture(autouse=True)

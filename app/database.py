@@ -105,3 +105,6 @@ def get_db(db_path: Optional[str] = None) -> Generator[sqlite3.Connection, None,
         raise
     finally:
         conn.close()
+
+
+get_db_connection = get_db

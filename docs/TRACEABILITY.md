@@ -4,8 +4,8 @@ Traceability matrix linking PROTOCOL.md cross-check matrix rows to test suites a
 
 | Row | Interaction | Target Invariant | Test File | Status | Evidence Reference |
 |---|---|---|---|---|---|
-| 1 | Agent, grounding, database | Every snapshot_id returned by /api/agent exists in product_snapshots; dropped recommendations logged | tests/integration/test_matrix_01_agent_grounding_db.py | NOT RUN | |
-| 2 | Agent to quote | snapshot_id works in /api/quotes; another session returns 404 | tests/integration/test_matrix_02_agent_to_quote.py | NOT RUN | |
+| 1 | Agent, grounding, database | Every snapshot_id returned by /api/agent exists in product_snapshots; dropped recommendations logged | tests/integration/test_matrix_01_agent_grounding_db.py | PASS | docs/evidence/phaseB3_gemini_grounding.txt |
+| 2 | Agent to quote | snapshot_id works in /api/quotes; another session returns 404 | tests/integration/test_matrix_02_agent_to_quote.py | PASS | docs/evidence/phaseB3_gemini_grounding.txt |
 | 3 | Quote, Channel3 refresh, currency | Non-USD/OOS returns NOT_PURCHASABLE; changed price returns PRICE_CHANGED | tests/integration/test_matrix_03_quote_refresh_currency.py | NOT RUN | |
 | 4 | Quote, budget, confirm | Over-budget blocked; confirm requires exact total; expired quote cannot be confirmed | tests/integration/test_matrix_04_quote_budget_confirm.py | NOT RUN | |
 | 5 | Confirm to order | Unconfirmed or expired quote cannot create order | tests/integration/test_matrix_05_confirm_to_order.py | NOT RUN | |
@@ -20,7 +20,7 @@ Traceability matrix linking PROTOCOL.md cross-check matrix rows to test suites a
 | 14 | Failure honesty | Upstream failure shows error and zero products; no seeded data leak | tests/integration/test_matrix_14_failure_honesty.py | NOT RUN | |
 | 15 | Sandbox honesty | Sandbox banner present across views; receipt clarifies no real order placed | tests/integration/test_matrix_15_sandbox_honesty.py | PASS (Static) | docs/evidence/phaseB0_bootstrap.txt |
 | 16 | Secret leakage | Distinctive fake keys never leak in HTTP responses, logs, static/, or git | tests/integration/test_matrix_16_secret_leakage.py | PASS | docs/evidence/phaseB1_platform_core.txt |
-| 17 | Untrusted text | HTML/script/prompt injection in product fields rendered safely as plain text | tests/integration/test_matrix_17_untrusted_text.py | NOT RUN | |
+| 17 | Untrusted text | HTML/script/prompt injection in product fields rendered safely as plain text | tests/integration/test_matrix_17_untrusted_text.py | PASS | docs/evidence/phaseB3_gemini_grounding.txt |
 | 18 | README reality | Following README from fresh clone gets app running and tests passing | tests/integration/test_matrix_18_readme_reality.py | NOT RUN | |
 | 19 | Hosted parity | Deployed app passes rows 10, 11, 13, 15 and full Sandbox checkout | tests/integration/test_matrix_19_hosted_parity.py | NOT RUN | |
 | 20 | Data persistence | Restart preserves database integrity; expired quotes unusable after restart | tests/integration/test_matrix_20_data_persistence.py | NOT RUN | |

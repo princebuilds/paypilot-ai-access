@@ -35,54 +35,47 @@ All returned products are confirmed in-stock, priced in USD, within requested bu
 
 ---
 
-### Query 2: "large button corded telephone"
-- **Customer Budget:** $50.00
-- **Channel3 Filter:** `filters: { "price": { "max_price": 50.0 }, "availability": ["InStock"] }`
+### Query 2: "jar opener for weak hands"
+- **Customer Budget:** $25.00
+- **Channel3 Filter:** `filters: { "price": { "max_price": 25.0 }, "availability": ["InStock"] }`
 - **Results Count:** 3
 - **Products:**
-  1. **Landline Telephone**
-     - **Channel3 ID:** `RnyntXV`
-     - **Price:** $49.99 USD
+  1. **Jar Opener**
+     - **Channel3 ID:** `IgBk9qZ`
+     - **Price:** $9.89 USD
      - **Availability:** InStock
-     - **Merchant Domain:** `pcrichard.com`
-     - **Brand:** AT&T
-     - **Evidence highlight:** High-contrast buttons, audio boost, hearing aid compatible.
-  2. **Corded Answering System with Large Tilt Display**
-     - **Channel3 ID:** `1DPTnEb`
-     - **Price:** $39.99 USD
+     - **Merchant Domain:** `kohls.com`
+     - **Brand:** Farberware
+     - **Evidence highlight:** Easy-grip manual jar opener designed for stubborn lids and weak grip.
+  2. **Good Grips Twisting Jar Opener**
+     - **Channel3 ID:** `qs8hetr`
+     - **Price:** $16.99 USD
      - **Availability:** InStock
-     - **Merchant Domain:** `officedepot.com`
-     - **Brand:** AT&T
-     - **Evidence highlight:** Extra-large tilt display, oversized keypad numbers.
-  3. **1-Line Caller ID Integrated Telephone System**
-     - **Channel3 ID:** `NiaSwn6`
-     - **Price:** $45.00 USD
+     - **Merchant Domain:** `containerstore.com`
+     - **Brand:** OXO
+     - **Evidence highlight:** Contoured non-slip grip, leverage base holds lids securely to reduce hand strain.
+  3. **Glad Bottle Jar Opener**
+     - **Channel3 ID:** `gM3y6Yt`
+     - **Price:** $2.99 USD
      - **Availability:** InStock
-     - **Merchant Domain:** `bestbuy.com`
-     - **Brand:** Panasonic
-     - **Evidence highlight:** 1-line corded base, visual ringer alert, caller ID.
-- **Assessment:** **REPLACE**. While functionally strong for older adults/accessibility, the top products carry prominent global trademarks (AT&T, Panasonic) which violates the hackathon rule: *"no third-party trademarks or copyrighted music without permission"*.
+     - **Merchant Domain:** `menards.com`
+     - **Brand:** Glad
+     - **Evidence highlight:** Multi-size lid opener for twist-off caps and jars.
+- **Assessment:** **KEEP**. Replaced the initial telephone query. Highly authentic assistive device for users with arthritis or reduced hand strength, all items priced in USD, in-stock, and under the $25 budget.
 
 ---
 
-### Alternative Queries Tested for Query 2 Replacement
+### Replaced Queries History
 
-Three candidate searches were executed and cached to evaluate unbranded/low-trademark accessibility items:
+1. **Replaced: "large button corded telephone"** (Budget: $50.00)
+   - Top products: AT&T Landline ($49.99), AT&T Corded Answering System ($39.99), Panasonic Integrated Telephone ($45.00).
+   - Reason for replacement: High trademark risk (AT&T, Panasonic) in hackathon video submission.
 
-1. **Candidate A: "large print weekly pill organizer"** (Budget: $20.00)
-   - **Returned:** Mead Academic Planner ($7.89, target.com), AT-A-GLANCE Appointment Book ($19.99, staples.com), Staples Planner ($17.99, staples.com).
-   - **Verdict:** **REJECT**. Merchant keyword matching returned paper office planners rather than medication organizers.
+2. **Rejected: "large print weekly pill organizer"** (Budget: $20.00)
+   - Returned paper appointment planners (Mead, Staples) rather than medication dispensers.
 
-2. **Candidate B: "jar opener for weak hands"** (Budget: $25.00)
-   - **Returned:**
-     1. Farberware Jar Opener ($9.89, kohls.com)
-     2. OXO Good Grips Twisting Jar Opener ($16.99, containerstore.com)
-     3. Glad Bottle Jar Opener ($2.99, menards.com)
-   - **Verdict:** **CANDIDATE (Functional accessibility)**. Highly authentic assistive device for arthritis/weak grip, real merchant links, all USD and under budget. While OXO/Farberware are known kitchen brands, they do not present the high trademark risk of telecom conglomerates like AT&T/Panasonic.
-
-3. **Candidate C: "7 day pill organizer"** (Budget: $15.00)
-   - **Returned:** Beauty Organizer ($6.00, tjmaxx.com), Paw Print Cat Pill Organizer ($3.99, chewy.com), Pill Caddy ($1.99, petco.com).
-   - **Verdict:** **REJECT**. Returned pet care and cosmetic organizers rather than medical assistive devices.
+3. **Rejected: "7 day pill organizer"** (Budget: $15.00)
+   - Returned pet accessories (Chewy, Petco) and cosmetic boxes (T.J. Maxx).
 
 ---
 

@@ -125,9 +125,10 @@ def parse_product_offer(product: Dict[str, Any]) -> Dict[str, Any]:
 class Channel3Client:
     """HTTP client for Channel3 API with retries, timeouts, and snapshot caching."""
 
-    def __init__(self, api_key: Optional[str] = None):
-        settings = get_settings()
-        self.api_key = api_key or settings.CHANNEL3_API_KEY
+    def __init__(self, api_key: Optional[str] = None, settings: Optional[Any] = None):
+        cfg = settings or get_settings()
+        self.settings = cfg
+        self.api_key = api_key or (getattr(cfg, "CHANNEL3_API_KEY", None))
         self.timeout = 15.0
 
     def _headers(self) -> Dict[str, str]:
@@ -189,9 +190,10 @@ class Channel3Client:
         params_str = json.dumps(params, sort_keys=True)
         now_dt = datetime.datetime.now(datetime.timezone.utc)
         cutoff_dt = (now_dt - datetime.timedelta(seconds=CACHE_TTL_SECONDS)).isoformat()
+        db_file = db_path or getattr(self.settings, "DATABASE_PATH", None)
 
         # 1. Check cache in database
-        with get_db(db_path) as conn:
+        with get_db(db_file) as conn:
             cached_search = conn.execute(
                 """
                 SELECT id FROM searches
@@ -247,7 +249,7 @@ class Channel3Client:
                     logger.warning("Dropped Channel3 product due to parse error: %s", parse_err)
 
             # Persist search and snapshots
-            with get_db(db_path) as conn:
+            with get_db(db_file) as conn:
                 conn.execute(
                     """
                     INSERT INTO searches (id, session_id, query, params_json, result_count, latency_ms, status, created_at)
@@ -287,7 +289,7 @@ class Channel3Client:
 
         except Exception as exc:
             latency_ms = int((time.time() - start_time) * 1000)
-            with get_db(db_path) as conn:
+            with get_db(db_file) as conn:
                 conn.execute(
                     """
                     INSERT INTO searches (id, session_id, query, params_json, result_count, latency_ms, status, created_at)
