@@ -81,7 +81,7 @@ flowchart TD
 |---|---|---|
 | `CHANNEL3_API_KEY` | Channel3 API key | Required |
 | `GEMINI_API_KEY` | Google Gemini API key | Required |
-| `GEMINI_MODEL` | Pinned Gemini model identifier | `gemini-2.5-flash` |
+| `GEMINI_MODEL` | Pinned Gemini model identifier | `gemini-3.5-flash-lite` |
 | `PAYPAL_CLIENT_ID` | PayPal Sandbox application client ID | Required |
 | `PAYPAL_CLIENT_SECRET` | PayPal Sandbox application secret | Required |
 | `PAYPAL_ENV` | Target PayPal environment | `sandbox` |
@@ -150,7 +150,8 @@ Refer to [SECURITY.md](SECURITY.md) for vulnerability disclosure procedures and 
 _TODO: Development timeline will be generated from verified git commits across Phases B0-B8._
 
 ## Tools and AI Disclosure
-- **AI Coding Assistant:** Google Antigravity (Gemini 3.8 Flash) was used as an autonomous pair-programming assistant under explicit protocol-driven constraints.
+- **AI Coding Assistant:** Google Antigravity IDE agent was used as an autonomous pair-programming assistant under explicit protocol-driven constraints. (Model version to be confirmed by project owner).
+- **Project Planning & Instruction Architecture:** Claude (Anthropic) was used by the owner for project planning, architecture review and writing the AGENTS.md, SPEC.md, PROTOCOL.md and MASTER_BUILD_PROMPT.md instruction files.
 - **External AI Platform:** Google Gemini API (`google-genai`).
 - **Data & Catalog Platform:** Channel3 API.
 - **Payments:** PayPal Orders v2 Sandbox.
