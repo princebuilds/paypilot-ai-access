@@ -275,3 +275,76 @@ Status: NOT RUN (Will record real Channel3, Gemini, and PayPal Sandbox interacti
 - **Recommendations Survived Grounding:** 0
 - **No recommendations survived grounding.** (Safe rejection verified)
 
+
+## Real End-to-End Agent & Grounding Verification (2026-11-10T07:04:05.539102+00:00)
+- **Model:** `gemini-3.5-flash-lite`
+- **Channel3 Base:** `api.trychannel3.com/v1`
+- **Mode:** Live end-to-end (`AgentService.run`) with caching
+
+### Query: "I need a sturdy wooden walking stick under $40"
+- **Budget:** $40.00
+- **Search ID:** `46037bfb11d8440eb89e43038fae16ea`
+- **Reply Text:** I found three sturdy wooden walking sticks that fit your budget.
+- **Model Proposed Recommendations:** 3
+- **Recommendations Dropped by Grounding:** 0
+- **Recommendations Survived Grounding:** 3
+- **Verified Recommendations & Reasons:**
+  1. **Wooden Cane Walking Stick** ($24.99 USD, `wayfair.com`)
+     - *Claim:* It provides stability with an anti-slip rubber stopper.
+       *Evidence (key_features):* "Anti-slip rubber stopper for stability"
+  2. **Natural Wood Walking Stick** ($39.99 USD, `walmart.com`)
+     - *Claim:* It is crafted from natural wood.
+       *Evidence (title):* "Natural Wood Walking Stick"
+     - *Claim:* It features a durable anti-skid rubber tip.
+       *Evidence (key_features):* "Durable anti-skid rubber tip"
+  3. **Wooden Cane Walking Stick** ($30.99 USD, `wayfair.com`)
+     - *Claim:* It is handcrafted from natural wood.
+       *Evidence (key_features):* "Handcrafted from natural wood with a weatherproof clear coating"
+     - *Claim:* It includes an anti-slip rubber stopper for stability.
+       *Evidence (description):* "and a rubber stopper at the bottom for anti-slip stability."
+
+### Query: "I need a jar opener for weak hands under $25"
+- **Budget:** $25.00
+- **Search ID:** `14befeeac69c4bf5b181a69a8e9ff124`
+- **Reply Text:** Here are three jar openers that fit your budget and help with weak hands.
+- **Model Proposed Recommendations:** 3
+- **Recommendations Dropped by Grounding:** 0
+- **Recommendations Survived Grounding:** 3
+- **Verified Recommendations & Reasons:**
+  1. **Jar Opener** ($9.89 USD, `kohls.com`)
+     - *Claim:* It is designed to easily open stubborn jar lids.
+       *Evidence (description):* "The Farberware Classic Soft Grips Jar Opener is designed to easily open stubborn jar lids and caps."
+  2. **Twisting Jar Opener** ($19.99 USD, `oxo.com`)
+     - *Claim:* It reduces strain on your hands and is ideal for weak or arthritic hands.
+       *Evidence (description):* "This OXO Good Grips Twisting Jar Opener with Base Pad is designed for effortless jar opening, reducing strain on your hands. Its large, ergonomic T-shaped handle is easy to grip, making it ideal for individuals with arthritic hands."
+  3. **Good Grips Twisting Jar Opener** ($16.99 USD, `containerstore.com`)
+     - *Claim:* It features an ergonomic handle that reduces muscle strain.
+       *Evidence (description):* "It features a non-slip base pad and sharp gripping jaws to securely hold jars, while the ergonomic handle is comfortable to grip and reduces muscle strain, making it ideal for individuals with arthritis or anyone needing a little extra help in the kitchen."
+
+### Query: "I need a handheld magnifying glass with light under $25"
+- **Budget:** $25.00
+- **Search ID:** `515c065f78894c0d8dc461e6fc4245bc`
+- **Reply Text:** I found three handheld magnifying glasses with lights within your budget.
+- **Model Proposed Recommendations:** 3
+- **Recommendations Dropped by Grounding:** 0
+- **Recommendations Survived Grounding:** 3
+- **Verified Recommendations & Reasons:**
+  1. **Magnifying Glass with LED Light** ($8.98 USD, `jbtools.com`)
+     - *Claim:* It is a handheld magnifier with an LED light.
+       *Evidence (description):* "This is a handheld magnifying glass from Titan Tools featuring 4.4x magnification, ideal for detailed inspections, reading small text, or intricate hobby work. It includes a built-in LED light to ensure clear visibility even in dimly lit environments."
+  2. **Magnifying Glass with LED Light, Lightweight Handheld Lighted 4x Magnifier** ($17.99 USD, `wayfair.com`)
+     - *Claim:* It is a lightweight handheld tool with integrated LED lights.
+       *Evidence (description):* "The Stalwart LED Lighted Magnifying Glass is a lightweight handheld tool designed to provide clear, magnified views of small print and detailed projects."
+  3. **Magnifying Glass** ($15.99 USD, `shop.advanceautoparts.com`)
+     - *Claim:* It features an LED light for enhanced visibility.
+       *Evidence (description):* "The TITAN 4.4x Magnifying Glass with LED Light offers enhanced visibility for detailed work with its 4.4x magnification and non-distorting optical grade glass lens."
+
+### Query: "I need a walking stick with large buttons under $40"
+- **Budget:** $40.00
+- **Search ID:** `906ebf2518624a6791c4a4a877ef930d`
+- **Reply Text:** I could not find a walking stick with large buttons. Try describing it another way.
+- **Model Proposed Recommendations:** 0
+- **Recommendations Dropped by Grounding:** 0
+- **Recommendations Survived Grounding:** 0
+- **No recommendations survived grounding.** (Safe rejection verified)
+

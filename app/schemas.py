@@ -24,6 +24,7 @@ class HealthResponse(BaseModel):
     channel3_configured: bool
     gemini_configured: bool
     paypal_configured: bool
+    quota_ok: bool = True
     gemini_model: Optional[str] = None
     last_channel3_call_at: Optional[str] = None
 

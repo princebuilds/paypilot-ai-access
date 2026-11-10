@@ -166,12 +166,19 @@
   - `tests/integration/test_matrix_11_csp_sdk_images.py` (Row 11: PASS)
   - `tests/integration/test_matrix_12_voice_keyboard_fallback.py` (Row 12: PASS)
   - `tests/integration/test_matrix_15_sandbox_honesty.py` (Row 15: PASS)
-- Gate status: **GREEN** (pytest: 89 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
+- Live Positive Query Evaluation:
+  - Re-run all 3 positive demo queries live: 3/3 on walking stick, 3/3 on jar opener, 3/3 on magnifier; 0/3 dropped; negative query 0/0 recommendations returned. Zero false rejections.
+- Quota Honesty & Graceful Degrade:
+  - Intercepted Gemini 429 quota errors; added graceful `"The assistant is busy, please try again."` response.
+  - Exposed `quota_ok` boolean in `GET /api/health` and added Matrix Row 14 test in `test_matrix_14_failure_honesty.py`.
+- Accessibility Status Documentation:
+  - Updated `docs/ACCESSIBILITY_TEST.md` explicitly marking manual screen-reader testing as **NOT RUN**.
+- Gate status: **GREEN** (pytest: 90 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
 
 ## Current Status
 - **Current Phase:** Phase B5 Complete and Fully Verified (Awaiting User Re-entry of PayPal Sandbox Credentials for Live Create-Order Verification)
 - **Gate Status:**
-  - `pytest -m 'not live'`: PASS (89 passed, 1 deselected in 15.72s)
+  - `pytest -m 'not live'`: PASS (90 passed, 1 deselected in 12.97s)
   - `python scripts/static_checks.py`: PASS (18 pass, 0 warn, 0 fail)
   - `ruff check .`: PASS (All checks passed)
 

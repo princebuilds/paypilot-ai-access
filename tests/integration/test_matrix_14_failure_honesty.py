@@ -86,3 +86,34 @@ def test_gemini_failure_honesty(test_setup):
     data = res.json()
     assert data["error"]["code"] == "UPSTREAM_ERROR"
     assert "assistant is not responding" in data["error"]["message"].lower()
+
+
+def test_gemini_quota_error_handled_gracefully(test_setup):
+    """Gemini 429 quota exhaustion produces friendly busy message without stack traces and updates health."""
+    settings = test_setup
+    app.dependency_overrides[get_settings] = lambda: settings
+
+    # Simulate google.genai 429 client error
+    def mock_quota_exceeded(contents, config):
+        raise RuntimeError("google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. Quota exceeded for metric")
+
+    agent_svc = AgentService(settings=settings, model_caller=mock_quota_exceeded)
+    app.dependency_overrides[get_agent_service] = lambda: agent_svc
+
+    client = TestClient(app)
+    res = client.post("/api/agent", json={"message": "walking stick", "budget": "40.00"})
+    assert res.status_code == 502
+    data = res.json()
+    assert data["error"]["code"] == "UPSTREAM_ERROR"
+    assert data["error"]["message"] == "The assistant is busy, please try again."
+    assert data["error"]["retryable"] is True
+    # Verify no stack trace in response
+    assert "traceback" not in res.text.lower()
+    assert "file " not in res.text.lower()
+
+    # Verify health endpoint exposes quota_ok: False
+    health_res = client.get("/api/health")
+    assert health_res.status_code == 200
+    health_data = health_res.json()
+    assert "quota_ok" in health_data
+    assert health_data["quota_ok"] is False

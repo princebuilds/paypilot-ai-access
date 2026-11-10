@@ -227,11 +227,11 @@
         let friendlyMsg = "Something went wrong. Please try again.";
 
         if (res.status === 429 || errCode === "RATE_LIMITED") {
-          friendlyMsg = "Many people are using this demo. Please wait a minute and try again.";
+          friendlyMsg = (errData.error && errData.error.message) ? errData.error.message : "Many people are using this demo. Please wait a minute and try again.";
         } else if (errCode === "AI_SERVICE_UNAVAILABLE" || res.status === 503) {
-          friendlyMsg = "The assistant is not responding. Please try again.";
+          friendlyMsg = (errData.error && errData.error.message) ? errData.error.message : "The assistant is not responding. Please try again.";
         } else if (errCode === "UPSTREAM_ERROR" || res.status === 502) {
-          friendlyMsg = "The product service is not responding. Please try again.";
+          friendlyMsg = (errData.error && errData.error.message) ? errData.error.message : "The product service is not responding. Please try again.";
         }
 
         updateAssistant(friendlyMsg, "Error", true, true);

@@ -26,6 +26,19 @@ from app.schemas import AgentResponse, LiveDataSummary
 
 logger = logging.getLogger("paypilot.agent")
 
+_quota_ok: bool = True
+
+
+def is_quota_ok() -> bool:
+    """Return whether Gemini upstream quota is operational."""
+    return _quota_ok
+
+
+def set_quota_status(ok: bool) -> None:
+    """Update global quota operational flag."""
+    global _quota_ok
+    _quota_ok = ok
+
 SYSTEM_INSTRUCTION = (
     "You are PayPilot, a shopping assistant for people who find online shopping hard. "
     "Use short, plain sentences and no jargon. Use only the product data returned by "
@@ -109,7 +122,17 @@ class AgentService:
     def _call_gemini(self, contents: List[Any], config: types.GenerateContentConfig) -> Any:
         """Execute Gemini model call, supporting dependency injection for testing."""
         if self.model_caller:
-            return self.model_caller(contents=contents, config=config)
+            try:
+                res = self.model_caller(contents=contents, config=config)
+                set_quota_status(True)
+                return res
+            except Exception as e:
+                err_str = str(e).lower()
+                if "429" in err_str or "resource_exhausted" in err_str or "quota" in err_str:
+                    set_quota_status(False)
+                    logger.warning("Gemini quota error intercepted: %s", type(e).__name__)
+                    raise UpstreamServiceError("The assistant is busy, please try again.") from e
+                raise
 
         if not self.settings.GEMINI_API_KEY:
             raise UpstreamServiceError("GEMINI_API_KEY is not configured")
@@ -121,11 +144,13 @@ class AgentService:
             last_err = None
             for attempt in range(3):
                 try:
-                    return client.models.generate_content(
+                    res = client.models.generate_content(
                         model=self.settings.GEMINI_MODEL,
                         contents=contents,
                         config=config,
                     )
+                    set_quota_status(True)
+                    return res
                 except Exception as e:
                     last_err = e
                     err_str = str(e).lower()
@@ -133,6 +158,10 @@ class AgentService:
                         logger.warning("Gemini 503 spike on attempt %d/3; waiting 2s...", attempt + 1)
                         time.sleep(2.0)
                         continue
+                    if "429" in err_str or "resource_exhausted" in err_str or "quota" in err_str:
+                        set_quota_status(False)
+                        logger.warning("Gemini quota exhausted (429): %s", type(e).__name__)
+                        raise UpstreamServiceError("The assistant is busy, please try again.") from e
                     break
             logger.error("Gemini API call failed: %s", type(last_err).__name__)
             raise UpstreamServiceError("The assistant is not responding. Please try again.") from last_err

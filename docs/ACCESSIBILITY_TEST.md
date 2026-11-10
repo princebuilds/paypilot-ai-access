@@ -42,6 +42,12 @@
 ## 5. Assistive Technology & Voice Architecture
 
 - **ARIA Live Regions:**
-  - `#agent-announcements`: `aria-live="polite"` and `aria-atomic="true"` for assistant speech and recommendations.
-  - `#error-banner`: `role="alert"` and `aria-live="assertive"` for system errors and retry guidance.
+  - `#live-announcer`: `aria-live="polite"` and `aria-atomic="true"` for assistant speech and recommendations.
+  - `#live-alert`: `role="alert"` and `aria-live="assertive"` for system errors and retry guidance.
 - **Voice Fallback:** Full flow remains 100% operational via keyboard and text input if speech recognition is denied or unsupported.
+
+## 6. Manual Assistive Technology Testing Status
+
+- **Screen-Reader Pass (NVDA / JAWS / VoiceOver):** **NOT RUN**.
+  - Automated axe-core checks (landmark semantics, accessible names, ARIA live region attributes, heading hierarchy) passed with 0 violations.
+  - Live manual screen-reader testing with active screen-reader software has **NOT RUN**.

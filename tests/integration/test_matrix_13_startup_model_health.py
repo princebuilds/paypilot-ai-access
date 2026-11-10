@@ -26,9 +26,11 @@ def test_health_endpoint_exposes_booleans_only(tmp_path):
     assert isinstance(data["channel3_configured"], bool)
     assert isinstance(data["gemini_configured"], bool)
     assert isinstance(data["paypal_configured"], bool)
+    assert isinstance(data["quota_ok"], bool)
     assert data["channel3_configured"] is True
     assert data["gemini_configured"] is True
     assert data["paypal_configured"] is True
+    assert data["quota_ok"] is True
 
     # Critical check: No secret values appear in the health response body
     raw_response = res.text

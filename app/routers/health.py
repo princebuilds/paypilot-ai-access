@@ -3,6 +3,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 
+from app.agent import is_quota_ok
 from app.config import Settings, get_settings, is_configured_secret
 from app.database import get_db
 from app.schemas import ClientConfigResponse, HealthResponse
@@ -48,6 +49,7 @@ def get_health(settings: Settings = Depends(get_settings)) -> HealthResponse:
         channel3_configured=channel3_configured,
         gemini_configured=gemini_configured,
         paypal_configured=paypal_configured,
+        quota_ok=is_quota_ok(),
         gemini_model=settings.GEMINI_MODEL,
         last_channel3_call_at=last_channel3_call_at,
     )
