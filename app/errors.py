@@ -1,6 +1,6 @@
 """AppError hierarchy and standardized error handling."""
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from fastapi import Request, status
 from fastapi.exceptions import RequestValidationError
@@ -16,13 +16,14 @@ class AppError(Exception):
         self,
         code: str,
         message: str,
-        status_code: int = status.HTTP_400_BAD_REQUEST,
+        status_code: Optional[int] = None,
         retryable: bool = False,
+        http_status: Optional[int] = None,
     ):
         super().__init__(message)
         self.code = code
         self.message = message
-        self.status_code = status_code
+        self.status_code = status_code or http_status or status.HTTP_400_BAD_REQUEST
         self.retryable = retryable
 
     def to_dict(self) -> Dict[str, Any]:

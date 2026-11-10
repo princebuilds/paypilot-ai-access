@@ -78,10 +78,45 @@
 - Gate status: **GREEN** (pytest: 54 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
 - Evidence saved: `docs/evidence/phaseB3_gemini_grounding.txt`.
 
+## Phase B4: Quotes, Budget, PayPal Sandbox, Orders & Capture (Done)
+- Built `app/quotes.py` (`QuotesService`):
+  - Fetches product snapshot from session with strict session isolation.
+  - Refreshes product price, currency, and availability using the free Channel3 detail endpoint.
+  - Enforces USD and InStock checks; raises 422 `NOT_PURCHASABLE` if non-USD or out of stock.
+  - Enforces price stability; raises 409 `PRICE_CHANGED` if upstream price differs from snapshot.
+  - Enforces customer budget; raises 422 `BUDGET_EXCEEDED` if quantity * unit_price > budget.
+  - Locks price with 10-minute expiry (`expires_at`), saving quotes in `QUOTED` state.
+  - Quote confirmation endpoint requires exact total match; raises 422 `TOTAL_MISMATCH` if altered.
+- Built `app/paypal.py` (`PayPalClient`):
+  - Targeting `https://api-m.sandbox.paypal.com` with cached OAuth bearer tokens.
+  - Uses `PayPal-Request-Id` for request idempotency on create and capture.
+  - Plain purchase amount payload (avoids breakdown mismatch errors).
+  - Four non-negotiable capture invariants verified: order `COMPLETED`, capture `COMPLETED`, exact amount and currency match stored quote, `custom_id` matches internal order ID.
+  - Maps `PENDING` capture status to pending (not completed); `DECLINED` / `PARTIALLY_COMPLETED` mapped to failed.
+  - Idempotent capture: re-checks already-captured orders without failing.
+  - Logs `paypal_debug_id` in `payment_events` table for all PayPal interactions.
+- Built routers:
+  - `app/routers/quotes.py`: `POST /api/quotes`, `POST /api/quotes/{quote_id}/confirm`.
+  - `app/routers/orders.py`: `POST /api/orders`, `POST /api/orders/{order_id}/capture`, `POST /api/orders/{order_id}/cancel`, `GET /api/orders/{order_id}`.
+- Recorded PayPal JS SDK standard checkout architecture decision in `docs/DECISIONS.md`.
+- Added matrix tests:
+  - `tests/integration/test_matrix_02_agent_to_quote.py` (Row 2: PASS)
+  - `tests/integration/test_matrix_03_quote_refresh_currency.py` (Row 3: PASS)
+  - `tests/integration/test_matrix_04_quote_budget_confirm.py` (Row 4: PASS)
+  - `tests/integration/test_matrix_05_confirm_to_order.py` (Row 5: PASS)
+  - `tests/integration/test_matrix_06_order_paypal_payload.py` (Row 6: PASS)
+  - `tests/integration/test_matrix_07_capture_verification_receipt.py` (Row 7: PASS)
+  - `tests/integration/test_matrix_08_session_isolation.py` (Row 8: PASS)
+  - `tests/integration/test_matrix_14_failure_honesty.py` (Row 14: PASS)
+  - `tests/integration/test_matrix_16_secret_leakage.py` (Row 16: PASS)
+  - `tests/integration/test_matrix_20_data_persistence.py` (Row 20: PASS)
+- Gate status: **GREEN** (pytest: 73 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
+- Evidence saved: `docs/evidence/phaseB4_quotes_orders.txt`.
+
 ## Current Status
-- **Current Phase:** Phase B4 (Quotes, Budget Check, Confirmation)
+- **Current Phase:** Phase B4 Complete (Awaiting User Sandbox Credentials for Live Create-Order Test, then Phase B5 Frontend)
 - **Gate Status:**
-  - `pytest -m 'not live'`: PASS (54 passed, 1 deselected)
+  - `pytest -m 'not live'`: PASS (73 passed, 1 deselected in 11.65s)
   - `python scripts/static_checks.py`: PASS (18 pass, 0 warn, 0 fail)
   - `ruff check .`: PASS (All checks passed)
 
@@ -91,22 +126,22 @@
 | Row | Interaction | Target Status | Evidence |
 |---|---|---|---|
 | 1 | Agent, grounding, database | PASS | `docs/evidence/phaseB3_gemini_grounding.txt` |
-| 2 | Agent to quote | PASS | `docs/evidence/phaseB3_gemini_grounding.txt` |
-| 3 | Quote, Channel3 refresh, currency | NOT RUN (Target: Phase B4) | |
-| 4 | Quote, budget, confirm | NOT RUN (Target: Phase B4) | |
-| 5 | Confirm to order | NOT RUN | |
-| 6 | Order to PayPal payload | NOT RUN | |
-| 7 | Capture, verification, receipt | NOT RUN | |
-| 8 | Session isolation | PASS | `docs/evidence/phaseB1_platform_core.txt` |
+| 2 | Agent to quote | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 3 | Quote, Channel3 refresh, currency | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 4 | Quote, budget, confirm | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 5 | Confirm to order | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 6 | Order to PayPal payload | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 7 | Capture, verification, receipt | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 8 | Session isolation | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
 | 9 | Rate limit | PASS | `docs/evidence/phaseB1_platform_core.txt` |
 | 10 | Frontend and API contract | NOT RUN | |
 | 11 | CSP, PayPal SDK, images | NOT RUN | |
 | 12 | Voice and keyboard fallback | NOT RUN | |
 | 13 | Startup, model pin, health | PASS | `docs/evidence/phaseB1_platform_core.txt` |
-| 14 | Failure honesty | NOT RUN | |
+| 14 | Failure honesty | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
 | 15 | Sandbox honesty | PASS (Static) | `docs/evidence/phaseB0_bootstrap.txt` |
-| 16 | Secret leakage | PASS | `docs/evidence/phaseB1_platform_core.txt` |
+| 16 | Secret leakage | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
 | 17 | Untrusted text | PASS | `docs/evidence/phaseB3_gemini_grounding.txt` |
 | 18 | README reality | NOT RUN | |
 | 19 | Hosted parity | NOT RUN | |
-| 20 | Data persistence | NOT RUN | |
+| 20 | Data persistence | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |

@@ -18,7 +18,7 @@ class SessionMiddleware(BaseHTTPMiddleware):
         existing_sid = request.cookies.get("sid")
         is_new_session = False
 
-        if existing_sid and len(existing_sid) == 32:
+        if existing_sid and 8 <= len(existing_sid) <= 64 and existing_sid.replace("-", "").replace("_", "").isalnum():
             session_id = existing_sid
         else:
             session_id = uuid.uuid4().hex

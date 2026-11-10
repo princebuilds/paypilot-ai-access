@@ -216,17 +216,20 @@ class AgentService:
         payload_text = "\n\n".join(delimited_blocks) if delimited_blocks else "No products found matching criteria."
 
         # 5. Append turn 1 response and tool response to conversation
-        model_part = types.Part.from_function_call(
-            name=tool_call.name,
-            args=args,
-        )
+        if hasattr(response_turn1, "candidates") and response_turn1.candidates:
+            contents.append(response_turn1.candidates[0].content)
+        else:
+            model_part = types.Part.from_function_call(
+                name=tool_call.name,
+                args=args,
+            )
+            contents.append(types.Content(role="model", parts=[model_part]))
+
         tool_part = types.Part.from_function_response(
             name=tool_call.name,
             response={"products_catalog": payload_text},
         )
-
-        contents.append(types.Content(role="model", parts=[model_part]))
-        contents.append(types.Content(role="tool", parts=[tool_part]))
+        contents.append(types.Content(role="user", parts=[tool_part]))
 
         # 6. Turn 2: Generate structured recommendations JSON
         config_turn2 = types.GenerateContentConfig(

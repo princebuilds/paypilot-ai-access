@@ -5,6 +5,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from app.config import Settings, get_settings
+from app.database import init_db
 from app.main import app
 
 
@@ -29,6 +30,7 @@ def test_no_secret_leakage_in_http_responses_or_logs(tmp_path):
 
     try:
         db_file = str(tmp_path / "test.db")
+        init_db(db_file)
         app.dependency_overrides[get_settings] = lambda: Settings(
             OFFLINE_TESTS=1,
             DATABASE_PATH=db_file,

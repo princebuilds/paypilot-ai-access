@@ -27,7 +27,18 @@ Record of decisions made during development, reasons, and any discrepancies note
   `{"price": {"price": float_val, "currency": "USD", "compare_at_price": ...}}`.
   The top-level offer dictionary has `"currency": null`. The defensive parser handles this nested shape seamlessly.
 
-## Gemini Model Selection & System Instruction Refinement
+## PayPal Integration & SDK Choice
+- **Date:** 2026-11-10
+- **SDK Generation Choice:**
+  PayPal provides legacy checkout.js, the current JavaScript SDK (`https://www.paypal.com/sdk/js`), and developer MCP / Agent Toolkits.
+  Per AGENTS.md Section 5 and current Standard Checkout documentation, PayPilot AI ACCESS pins the **PayPal JavaScript SDK** (`https://www.paypal.com/sdk/js?client-id={CLIENT_ID}&currency=USD&intent=capture`).
+- **Merchant Toolkits Excluded:**
+  PayPal's Agent Toolkit and MCP server (`mcp.sandbox.paypal.com`) were evaluated and intentionally excluded because they are merchant-side tools for catalog and inventory management, whereas PayPilot is a buyer-side shopping assistant where the buyer explicitly approves payments.
+- **Server-Side Money Safety Architecture:**
+  - Create order accepts only `quote_id`, looks up locked price and session from database, and sends single purchase_unit without item breakdown to prevent breakdown mismatch errors.
+  - Capture accepts only internal `order_id`, executes capture with idempotency key, and verifies all 4 invariants (order status COMPLETED, capture status COMPLETED, amount/currency match, custom_id match).
+  - PENDING capture status is shown as pending, never completed.
+  - Re-capturing an already-captured order fetches existing order details and returns verified receipt idempotently instead of failing.
 - **Date:** 2026-11-10
 - **Model Deprecation / Discovery:**
   Querying `client.models.list()` revealed that older models (`gemini-2.5-flash`, `gemini-2.5-pro`, `gemini-2.5-flash-lite`) return HTTP 404 NOT_FOUND ("no longer available to new users").

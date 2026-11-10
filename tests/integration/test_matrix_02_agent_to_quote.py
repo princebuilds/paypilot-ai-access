@@ -106,6 +106,18 @@ def test_agent_snapshot_id_valid_for_quote(test_env, monkeypatch):
     assert quote_req.snapshot_id == snapshot_id
     assert quote_req.quantity == 1
 
+    # Verify that calling /api/quotes with client works
+    q_res = client.post("/api/quotes", json={"snapshot_id": snapshot_id, "quantity": 1, "budget": "40.00"})
+    assert q_res.status_code == 200
+    q_data = q_res.json()
+    assert q_data["quote_id"].startswith("quote_")
+    assert q_data["status"] == "QUOTED"
+
+    # Verify that another session calling /api/quotes with the same snapshot_id gets 404
+    other_client = TestClient(app, cookies={"sid": "other_unrelated_session"})
+    other_res = other_client.post("/api/quotes", json={"snapshot_id": snapshot_id, "quantity": 1})
+    assert other_res.status_code == 404
+
     # Verify that the snapshot exists in DB and is linked to the session's search
     with get_db_connection(db_file) as conn:
         cur = conn.cursor()
