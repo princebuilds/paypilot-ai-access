@@ -61,7 +61,28 @@ All returned products are confirmed in-stock, priced in USD, within requested bu
      - **Merchant Domain:** `bestbuy.com`
      - **Brand:** Panasonic
      - **Evidence highlight:** 1-line corded base, visual ringer alert, caller ID.
-- **Assessment:** **KEEP**. Ideal for accessibility demo (target audience: older adults/low vision). While AT&T and Panasonic are established consumer electronics brands, the products are generic accessibility appliances without dominant fashion trademarks.
+- **Assessment:** **REPLACE**. While functionally strong for older adults/accessibility, the top products carry prominent global trademarks (AT&T, Panasonic) which violates the hackathon rule: *"no third-party trademarks or copyrighted music without permission"*.
+
+---
+
+### Alternative Queries Tested for Query 2 Replacement
+
+Three candidate searches were executed and cached to evaluate unbranded/low-trademark accessibility items:
+
+1. **Candidate A: "large print weekly pill organizer"** (Budget: $20.00)
+   - **Returned:** Mead Academic Planner ($7.89, target.com), AT-A-GLANCE Appointment Book ($19.99, staples.com), Staples Planner ($17.99, staples.com).
+   - **Verdict:** **REJECT**. Merchant keyword matching returned paper office planners rather than medication organizers.
+
+2. **Candidate B: "jar opener for weak hands"** (Budget: $25.00)
+   - **Returned:**
+     1. Farberware Jar Opener ($9.89, kohls.com)
+     2. OXO Good Grips Twisting Jar Opener ($16.99, containerstore.com)
+     3. Glad Bottle Jar Opener ($2.99, menards.com)
+   - **Verdict:** **CANDIDATE (Functional accessibility)**. Highly authentic assistive device for arthritis/weak grip, real merchant links, all USD and under budget. While OXO/Farberware are known kitchen brands, they do not present the high trademark risk of telecom conglomerates like AT&T/Panasonic.
+
+3. **Candidate C: "7 day pill organizer"** (Budget: $15.00)
+   - **Returned:** Beauty Organizer ($6.00, tjmaxx.com), Paw Print Cat Pill Organizer ($3.99, chewy.com), Pill Caddy ($1.99, petco.com).
+   - **Verdict:** **REJECT**. Returned pet care and cosmetic organizers rather than medical assistive devices.
 
 ---
 
