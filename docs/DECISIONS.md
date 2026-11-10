@@ -59,3 +59,16 @@ Record of decisions made during development, reasons, and any discrepancies note
   Reason: `gemini-3.5-flash` strictly adhered to the missing budget rule by asking clarifying questions even when both were stated unless prompted that presence of both implies calling the search tool. This preserves the single clarifying question for vague requests while enabling deterministic tool calling when parameters are present.
 - **Model Caller Dependency Injection:**
   `AgentService` accepts an injectable `model_caller` parameter. In non-live tests, scripted responses simulate function calling and structured outputs with zero network dependency. Real live tests execute against the pinned `gemini-3.5-flash` model via `scripts/live_smoke_test.py --gemini`.
+- **Pinned Model Consolidation (gemini-3.5-flash-lite):**
+  - Switched pinned model from `gemini-3.5-flash` to `gemini-3.5-flash-lite` across `config.py`, `.env.example`, `.env`, and health checks.
+  - Reason: `gemini-3.5-flash` exhausted the free-tier 20 requests/day quota during testing, whereas `gemini-3.5-flash-lite` has an independent quota allocation, identical function-calling and structured-output support, and lower response latency (~1.5s vs ~2.8s).
+- **Playwright and axe-playwright-python Dev Dependencies:**
+  - Added `playwright==1.65.0` and `axe-playwright-python==0.1.8` to `requirements-dev.txt`.
+  - Reason: Enables automated headless browser accessibility audits (axe-core WCAG 2.1 AA) and keyboard-only walkthrough validation without manual guesswork.
+- **PayPal JS SDK Integration:**
+  - Selected official PayPal Standard Checkout JS SDK: `<script src="https://www.paypal.com/sdk/js?client-id={client_id}&currency=USD&intent=capture"></script>`
+  - Official documentation reference: https://developer.paypal.com/docs/checkout/standard/integrate/
+  - Reason: Current official Standard Checkout client SDK supporting buyer-approved popups, server-side capture idempotency, and clean lifecycle hooks (`createOrder`, `onApprove`, `onCancel`, `onError`).
+- **Content-Security-Policy (CSP) Middleware:**
+  - Implemented `SecurityHeadersMiddleware` adding strict CSP directives allowing only self, PayPal domains (`paypal.com`, `paypalobjects.com`), and HTTPS product image sources.
+  - Reason: Satisfies Cross-Check Matrix Row 11 security and integrity invariants.

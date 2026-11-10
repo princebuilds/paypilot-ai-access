@@ -14,11 +14,11 @@ Traceability matrix linking PROTOCOL.md cross-check matrix rows to test suites a
 | 8 | Session isolation | Session cannot access, confirm, create, or capture another session's resources | tests/integration/test_matrix_08_session_isolation.py | PASS | docs/evidence/phaseB4_quotes_orders.txt |
 | 9 | Rate limit | Limit per IP, configurable, friendly message, doesn't block smoke test | tests/integration/test_matrix_09_rate_limit.py | PASS | docs/evidence/phaseB1_platform_core.txt |
 | 10 | Frontend & API contract | static/app.js calls valid endpoints/fields; no price/amount sent to order/capture | tests/integration/test_matrix_10_frontend_api_contract.py | PASS | docs/evidence/phaseB5_frontend.txt |
-| 11 | CSP, PayPal SDK, images | Page loads with CSP, PayPal buttons render, images show, no CSP console errors | tests/integration/test_matrix_11_csp_sdk_images.py | NOT RUN | |
-| 12 | Voice & keyboard fallback | Full flow functions with keyboard and text when speech/mic denied | tests/integration/test_matrix_12_voice_keyboard_fallback.py | NOT RUN | |
+| 11 | CSP, PayPal SDK, images | Page loads with CSP, PayPal buttons render, images show, no CSP console errors | tests/integration/test_matrix_11_csp_sdk_images.py | PASS | docs/evidence/phaseB5_frontend.txt |
+| 12 | Voice & keyboard fallback | Full flow functions with keyboard and text when speech/mic denied | tests/integration/test_matrix_12_voice_keyboard_fallback.py | PASS | docs/evidence/phaseB5_frontend.txt |
 | 13 | Startup, model pin, health | Missing key or unlisted model stops startup; /api/health returns booleans only | tests/integration/test_matrix_13_startup_model_health.py | PASS | docs/evidence/phaseB1_platform_core.txt |
 | 14 | Failure honesty | Upstream failure shows error and zero products; no seeded data leak | tests/integration/test_matrix_14_failure_honesty.py | PASS | docs/evidence/phaseB4_quotes_orders.txt |
-| 15 | Sandbox honesty | Sandbox banner present across views; receipt clarifies no real order placed | tests/integration/test_matrix_15_sandbox_honesty.py | PASS (Static) | docs/evidence/phaseB0_bootstrap.txt |
+| 15 | Sandbox honesty | Sandbox banner present across views; receipt clarifies no real order placed | tests/integration/test_matrix_15_sandbox_honesty.py | PASS | docs/evidence/phaseB5_frontend.txt |
 | 16 | Secret leakage | Distinctive fake keys never leak in HTTP responses, logs, static/, or git | tests/integration/test_matrix_16_secret_leakage.py | PASS | docs/evidence/phaseB4_quotes_orders.txt |
 | 17 | Untrusted text | HTML/script/prompt injection in product fields rendered safely as plain text | tests/integration/test_matrix_17_untrusted_text.py | PASS | docs/evidence/phaseB3_gemini_grounding.txt |
 | 18 | README reality | Following README from fresh clone gets app running and tests passing | tests/integration/test_matrix_18_readme_reality.py | NOT RUN | |

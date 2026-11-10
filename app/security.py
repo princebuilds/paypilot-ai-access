@@ -10,6 +10,29 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from app.config import get_settings
 from app.errors import RateLimitedError
 
+CSP_POLICY = (
+    "default-src 'self'; "
+    "script-src 'self' 'unsafe-inline' https://www.paypal.com https://*.paypalobjects.com; "
+    "style-src 'self' 'unsafe-inline'; "
+    "img-src 'self' data: https:; "
+    "frame-src https://*.paypal.com; "
+    "connect-src 'self' https://*.paypal.com https://*.paypalobjects.com; "
+    "object-src 'none'; "
+    "base-uri 'self';"
+)
+
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Attach standard security headers including Content-Security-Policy."""
+
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+        response = await call_next(request)
+        response.headers["Content-Security-Policy"] = CSP_POLICY
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        return response
+
 
 class SessionMiddleware(BaseHTTPMiddleware):
     """Ensure every client has an anonymous, HttpOnly session cookie 'sid'."""

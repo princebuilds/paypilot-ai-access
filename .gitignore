@@ -33,6 +33,7 @@ htmlcov/
 
 # Local scratch and superseded files
 _local/
+setenv.ps1
 
 # OS artifacts
 Thumbs.db

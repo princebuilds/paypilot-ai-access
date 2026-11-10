@@ -198,3 +198,80 @@ Status: NOT RUN (Will record real Channel3, Gemini, and PayPal Sandbox interacti
      - *Claim:* These are red camouflage military pride buttons.
        *Evidence (title):* "Beistle 2" Red Camouflage Military Pride Buttons, 6ct."
 
+
+## Real End-to-End Agent & Grounding Verification (2026-11-10T06:40:46.039896+00:00)
+- **Model:** `gemini-3.5-flash-lite`
+- **Channel3 Base:** `api.trychannel3.com/v1`
+- **Mode:** Live end-to-end (`AgentService.run`) with caching
+
+### Query: "I need a sturdy wooden walking stick under $40"
+- **Budget:** $40.00
+- **Search ID:** `57e991796ac148a9ad044419296b38b7`
+- **Reply Text:** I found these sturdy wooden walking sticks that match what you need.
+- **Model Proposed Recommendations:** 3
+- **Recommendations Dropped by Grounding:** 0
+- **Recommendations Survived Grounding:** 3
+- **Verified Recommendations & Reasons:**
+  1. **Wooden Cane Walking Stick** ($24.99 USD, `wayfair.com`)
+     - *Claim:* It is made of wood.
+       *Evidence (title):* "Wooden Cane Walking Stick"
+     - *Claim:* It has an anti-slip rubber stopper for stability.
+       *Evidence (key_features):* "Anti-slip rubber stopper for stability"
+  2. **Natural Wood Walking Stick** ($39.99 USD, `walmart.com`)
+     - *Claim:* It is a natural wood walking stick.
+       *Evidence (title):* "Natural Wood Walking Stick"
+     - *Claim:* It is handcrafted for a rustic look and feel.
+       *Evidence (key_features):* "Handcrafted rustic look and feel"
+  3. **Wooden Cane Walking Stick** ($30.99 USD, `wayfair.com`)
+     - *Claim:* It is a wooden cane walking stick.
+       *Evidence (title):* "Wooden Cane Walking Stick"
+     - *Claim:* It features a lightweight design.
+       *Evidence (key_features):* "Lightweight design suitable for indoor and outdoor use"
+
+### Query: "I need a jar opener for weak hands under $25"
+- **Budget:** $25.00
+- **Search ID:** `1bc1f6cd613c472285b91c61a868fca4`
+- **Reply Text:** I found three jar openers that fit your needs and budget.
+- **Model Proposed Recommendations:** 3
+- **Recommendations Dropped by Grounding:** 0
+- **Recommendations Survived Grounding:** 3
+- **Verified Recommendations & Reasons:**
+  1. **Jar Opener** ($9.89 USD, `kohls.com`)
+     - *Claim:* It is designed to easily open stubborn jar lids.
+       *Evidence (description):* "The Farberware Classic Soft Grips Jar Opener is designed to easily open stubborn jar lids and caps."
+  2. **Good Grips Twisting Jar Opener** ($16.99 USD, `containerstore.com`)
+     - *Claim:* It is ideal for individuals with arthritis or needing extra help.
+       *Evidence (description):* "making it ideal for individuals with arthritis or anyone needing a little extra help in the kitchen."
+     - *Claim:* The handle is gentle on arthritic hands.
+       *Evidence (key_features):* "Large, easy-to-grip handle is gentle on even arthritic hands"
+  3. **Twisting Jar Opener** ($19.99 USD, `oxo.com`)
+     - *Claim:* It is designed for effortless opening and reduces hand strain.
+       *Evidence (description):* "This OXO Good Grips Twisting Jar Opener with Base Pad is designed for effortless jar opening, reducing strain on your hands."
+
+### Query: "I need a handheld magnifying glass with light under $25"
+- **Budget:** $25.00
+- **Search ID:** `f78c387fe7144b60963c84ccdbacc415`
+- **Reply Text:** I found three handheld magnifying glasses with lights that fit your budget.
+- **Model Proposed Recommendations:** 3
+- **Recommendations Dropped by Grounding:** 0
+- **Recommendations Survived Grounding:** 3
+- **Verified Recommendations & Reasons:**
+  1. **5X Magnifying Glass with Light, Handheld 48 LED Lighted Magnifier for Reading** ($22.99 USD, `wayfair.com`)
+     - *Claim:* It is a handheld magnifying glass with a light.
+       *Evidence (title):* "5X Magnifying Glass with Light, Handheld 48 LED Lighted Magnifier for Reading"
+  2. **Magnifying Glass with LED Light, Lightweight Handheld Lighted 4x Magnifier** ($17.99 USD, `wayfair.com`)
+     - *Claim:* It is a lightweight handheld magnifier with an LED light.
+       *Evidence (title):* "Magnifying Glass with LED Light, Lightweight Handheld Lighted 4x Magnifier"
+  3. **Magnifying Glass with Light, 10X 45X Handheld Glass Reading Magnifier** ($9.99 USD, `newegg.com`)
+     - *Claim:* It is a handheld reading magnifier with a light.
+       *Evidence (title):* "Magnifying Glass with Light, 10X 45X Handheld Glass Reading Magnifier"
+
+### Query: "I need a walking stick with large buttons under $40"
+- **Budget:** $40.00
+- **Search ID:** `d4d12ed7dca5444f925a60410931ffb4`
+- **Reply Text:** I could not find a walking stick with large buttons. Try describing it another way.
+- **Model Proposed Recommendations:** 0
+- **Recommendations Dropped by Grounding:** 0
+- **Recommendations Survived Grounding:** 0
+- **No recommendations survived grounding.** (Safe rejection verified)
+

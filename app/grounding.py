@@ -134,14 +134,52 @@ def validate_reasons(
     return valid_reasons, drop_reasons
 
 
+def is_product_relevant_to_query(snapshot: Dict[str, Any], requested_query: Optional[str]) -> bool:
+    """Check if snapshot matches the primary requested product type.
+
+    If the user asked for a walking stick / cane, novelty pins or clothing buttons must not be recommended.
+    """
+    if not requested_query:
+        return True
+
+    q_lower = requested_query.lower()
+    title_lower = str(snapshot.get("title", "")).lower()
+    desc_lower = str(snapshot.get("description", "")).lower()
+    corpus = f"{title_lower} {desc_lower}"
+
+    # 1. Walking stick / cane
+    if any(term in q_lower for term in ["walking stick", "walking cane", "hiking pole", "trekking pole", "cane"]):
+        cane_terms = ["walking stick", "cane", "walking cane", "hiking pole", "trekking pole", "crutch", "staff"]
+        if not any(term in corpus for term in cane_terms):
+            return False
+
+    # 2. Magnifier / magnifying glass
+    if any(term in q_lower for term in ["magnif", "magnifying glass", "reading glass"]):
+        if not any(term in corpus for term in ["magnif", "magnifying", "loupe"]):
+            return False
+
+    # 3. Jar opener
+    if any(term in q_lower for term in ["jar opener", "can opener", "bottle opener", "opener"]):
+        if not any(term in corpus for term in ["opener", "open jar", "open lid", "jar lid"]):
+            return False
+
+    # 4. Telephone / phone
+    if any(term in q_lower for term in ["phone", "telephone"]):
+        if not any(term in corpus for term in ["phone", "telephone", "handset"]):
+            return False
+
+    return True
+
+
 def ground_recommendations(
     raw_recommendations: List[Dict[str, Any]],
     snapshots_by_id: Dict[str, Dict[str, Any]],
+    requested_query: Optional[str] = None,
 ) -> Tuple[List[RecommendationItem], List[str]]:
     """Filter model recommendations against stored snapshots.
 
     Drops any recommendation whose product ID is missing, whose evidence text is not verbatim,
-    or whose reasons contain incorrect price claims.
+    whose reasons contain incorrect price claims, or whose product type does not match request.
     """
     surviving_items: List[RecommendationItem] = []
     dropped_logs: List[str] = []
@@ -158,6 +196,13 @@ def ground_recommendations(
 
         if not snapshot:
             msg = f"Dropped recommendation: product_id '{prod_id}' not found in current search snapshots"
+            logger.warning(msg)
+            dropped_logs.append(msg)
+            continue
+
+        # Relevance check: must match requested product type
+        if not is_product_relevant_to_query(snapshot, requested_query):
+            msg = f"Dropped recommendation [{snapshot.get('channel3_id')}]: product '{snapshot.get('title')}' is not the requested product type"
             logger.warning(msg)
             dropped_logs.append(msg)
             continue
@@ -206,9 +251,19 @@ def ground_recommendations(
 def build_safe_reply_text(
     model_summary: Optional[str],
     surviving_items: List[RecommendationItem],
+    requested_query: Optional[str] = None,
 ) -> str:
     """Produce grounded reply text for voice output and UI."""
     if not surviving_items:
+        if model_summary and "could not find" in model_summary.lower():
+            if not extract_mentioned_prices(model_summary):
+                return model_summary.strip()
+        if requested_query:
+            clean_q = requested_query.strip()
+            # Clean customer prompt prefixes if any
+            clean_q = re.sub(r"^(i need a|i need an|looking for a|looking for an|customer request:)\s*", "", clean_q, flags=re.I)
+            clean_q = re.sub(r"\s+under\s+\$?\d+.*$", "", clean_q, flags=re.I)
+            return f"I could not find a {clean_q.strip()}. Try describing it another way."
         return "I could not find a confident match. Try describing it another way."
 
     count = len(surviving_items)

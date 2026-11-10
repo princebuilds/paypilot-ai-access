@@ -145,10 +145,33 @@
 - Gate status: **GREEN** (pytest: 77 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
 - Evidence saved: `docs/evidence/phaseB5_frontend.txt`.
 
+## Phase B5 Verification & Accessibility Remediation (Done)
+- Fixed relevance bug:
+  - Enforced category relevance checking in `app/grounding.py` and `app/agent.py`.
+  - Irrelevant product proposals are dropped with zero recommendations returned and plain fallback message.
+  - Unit test `test_relevance_rule_rejects_irrelevant_product_types` added.
+  - Live agent evaluation re-run: `"walking stick with large buttons under $40"` correctly returns 0 recommendations with clear guidance message.
+- Pinned Model Consolidation:
+  - Pinned `gemini-3.5-flash-lite` uniformly across `config.py`, `.env.example`, `.env`, and health checks.
+- Measured Accessibility Verification:
+  - Installed `playwright` and `axe-playwright-python` dev dependencies (documented in `DECISIONS.md`).
+  - Created automated audit script `scripts/run_accessibility_audit.py`.
+  - Executed real headless Chromium test: 0 axe-core violations on `index.html`, 0 on `receipt.html`, sequential keyboard navigation PASS, 200% zoom scaling PASS.
+  - Saved real output to `docs/ACCESSIBILITY_TEST.md`.
+- Content-Security-Policy:
+  - Implemented `SecurityHeadersMiddleware` in `app/security.py` enforcing strict CSP, X-Content-Type-Options, X-Frame-Options, and Referrer-Policy.
+- Public vs Secret Configuration:
+  - Verified `GET /api/config` returns only public `paypal_client_id`, never secrets. Added test to Matrix Row 16.
+- Cross-Check Matrix Test Suites:
+  - `tests/integration/test_matrix_11_csp_sdk_images.py` (Row 11: PASS)
+  - `tests/integration/test_matrix_12_voice_keyboard_fallback.py` (Row 12: PASS)
+  - `tests/integration/test_matrix_15_sandbox_honesty.py` (Row 15: PASS)
+- Gate status: **GREEN** (pytest: 89 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
+
 ## Current Status
-- **Current Phase:** Phase B5 Complete (Awaiting User Re-entry of PayPal Sandbox Credentials for Live Create-Order Verification)
+- **Current Phase:** Phase B5 Complete and Fully Verified (Awaiting User Re-entry of PayPal Sandbox Credentials for Live Create-Order Verification)
 - **Gate Status:**
-  - `pytest -m 'not live'`: PASS (77 passed, 1 deselected in 11.58s)
+  - `pytest -m 'not live'`: PASS (89 passed, 1 deselected in 15.72s)
   - `python scripts/static_checks.py`: PASS (18 pass, 0 warn, 0 fail)
   - `ruff check .`: PASS (All checks passed)
 
@@ -167,11 +190,11 @@
 | 8 | Session isolation | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
 | 9 | Rate limit | PASS | `docs/evidence/phaseB1_platform_core.txt` |
 | 10 | Frontend and API contract | PASS | `docs/evidence/phaseB5_frontend.txt` |
-| 11 | CSP, PayPal SDK, images | NOT RUN | |
-| 12 | Voice and keyboard fallback | NOT RUN | |
+| 11 | CSP, PayPal SDK, images | PASS | `docs/evidence/phaseB5_frontend.txt` |
+| 12 | Voice and keyboard fallback | PASS | `docs/evidence/phaseB5_frontend.txt` |
 | 13 | Startup, model pin, health | PASS | `docs/evidence/phaseB1_platform_core.txt` |
 | 14 | Failure honesty | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
-| 15 | Sandbox honesty | PASS (Static) | `docs/evidence/phaseB0_bootstrap.txt` |
+| 15 | Sandbox honesty | PASS | `docs/evidence/phaseB5_frontend.txt` |
 | 16 | Secret leakage | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
 | 17 | Untrusted text | PASS | `docs/evidence/phaseB3_gemini_grounding.txt` |
 | 18 | README reality | NOT RUN | |

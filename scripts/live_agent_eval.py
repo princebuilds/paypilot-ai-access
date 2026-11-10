@@ -39,8 +39,8 @@ def run_eval():
     orig_ground = agent_module.ground_recommendations
     last_ground_info = {}
 
-    def tracking_ground(raw_recs, snapshots_by_id):
-        surviving, drops = orig_ground(raw_recs, snapshots_by_id)
+    def tracking_ground(raw_recs, snapshots_by_id, requested_query=None):
+        surviving, drops = orig_ground(raw_recs, snapshots_by_id, requested_query=requested_query)
         last_ground_info["raw_count"] = len(raw_recs)
         last_ground_info["surviving_count"] = len(surviving)
         last_ground_info["dropped_count"] = len(drops)

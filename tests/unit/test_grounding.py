@@ -173,3 +173,51 @@ def test_safe_reply_text_preserves_valid_summary():
     good_summary = "I found 1 option for you at $26.01."
     safe_text = build_safe_reply_text(good_summary, [item])
     assert safe_text == good_summary
+
+
+def test_relevance_rule_rejects_irrelevant_product_types():
+    """Verify that when a user requests a walking stick, novelty pin-back buttons are dropped."""
+    button_snapshot = {
+        "id": "snap_button_001",
+        "channel3_id": "ch3_btn_99",
+        "title": "Broomstick Ride Rectangular Button",
+        "description": "Show off your love for witches with this rectangular button pin.",
+        "key_features_json": json.dumps(["Metal pin back"]),
+        "materials_json": json.dumps(["Metal", "Plastic"]),
+        "price": "3.99",
+        "currency": "USD",
+        "availability": "InStock",
+        "merchant_domain": "hottopic.com",
+    }
+    snapshots = {button_snapshot["id"]: button_snapshot}
+    raw_recs = [
+        {
+            "product_id": "snap_button_001",
+            "reasons": [
+                {
+                    "claim": "It is a rectangular button pin",
+                    "evidence_field": "description",
+                    "evidence_text": "rectangular button pin",
+                }
+            ],
+        }
+    ]
+
+    # User explicitly requested a walking stick
+    surviving, drops = ground_recommendations(
+        raw_recs,
+        snapshots,
+        requested_query="walking stick with large buttons",
+    )
+    assert len(surviving) == 0
+    assert len(drops) == 1
+    assert "not the requested product type" in drops[0]
+
+    # Verify reply text generates plain rejection message
+    reply = build_safe_reply_text(
+        model_summary="Here are button products.",
+        surviving_items=surviving,
+        requested_query="walking stick with large buttons",
+    )
+    assert "I could not find a walking stick with large buttons" in reply
+

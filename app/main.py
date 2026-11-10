@@ -15,7 +15,7 @@ from app.errors import (
     validation_error_handler,
 )
 from app.routers import agent, health, orders, quotes
-from app.security import SessionMiddleware
+from app.security import SecurityHeadersMiddleware, SessionMiddleware
 
 
 @asynccontextmanager
@@ -35,6 +35,7 @@ app = FastAPI(
 )
 
 # Middleware
+app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(SessionMiddleware)
 
 # Exception handlers
