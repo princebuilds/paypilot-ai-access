@@ -3,7 +3,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 
-from app.config import Settings, get_settings
+from app.config import Settings, get_settings, is_configured_secret
 from app.database import get_db
 from app.schemas import HealthResponse
 
@@ -13,13 +13,11 @@ router = APIRouter()
 @router.get("/health", response_model=HealthResponse)
 def get_health(settings: Settings = Depends(get_settings)) -> HealthResponse:
     """Return operational status booleans and safe configuration info."""
-    channel3_configured = bool(settings.CHANNEL3_API_KEY and settings.CHANNEL3_API_KEY.strip())
-    gemini_configured = bool(settings.GEMINI_API_KEY and settings.GEMINI_API_KEY.strip())
-    paypal_configured = bool(
-        settings.PAYPAL_CLIENT_ID
-        and settings.PAYPAL_CLIENT_ID.strip()
-        and settings.PAYPAL_CLIENT_SECRET
-        and settings.PAYPAL_CLIENT_SECRET.strip()
+    channel3_configured = is_configured_secret(settings.CHANNEL3_API_KEY)
+    gemini_configured = is_configured_secret(settings.GEMINI_API_KEY)
+    paypal_configured = (
+        is_configured_secret(settings.PAYPAL_CLIENT_ID)
+        and is_configured_secret(settings.PAYPAL_CLIENT_SECRET)
     )
 
     last_channel3_call_at: Optional[str] = None
@@ -42,4 +40,3 @@ def get_health(settings: Settings = Depends(get_settings)) -> HealthResponse:
         gemini_model=settings.GEMINI_MODEL,
         last_channel3_call_at=last_channel3_call_at,
     )
-

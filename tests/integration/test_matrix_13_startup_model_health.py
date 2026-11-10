@@ -38,6 +38,29 @@ def test_health_endpoint_exposes_booleans_only(tmp_path):
     assert "test_paypal_secret" not in raw_response
 
 
+def test_health_endpoint_reports_false_for_placeholder_keys(tmp_path):
+    """Placeholder keys must be treated as unconfigured."""
+    db_file = str(tmp_path / "test.db")
+    app.dependency_overrides[get_settings] = lambda: Settings(
+        OFFLINE_TESTS=1,
+        DATABASE_PATH=db_file,
+        CHANNEL3_API_KEY="your_channel3_api_key_here",
+        GEMINI_API_KEY="your_gemini_api_key_here",
+        PAYPAL_CLIENT_ID="your_paypal_client_id_here",
+        PAYPAL_CLIENT_SECRET="your_paypal_secret_here",
+        GEMINI_MODEL="placeholder",
+    )
+    client = TestClient(app)
+
+    res = client.get("/api/health")
+    assert res.status_code == 200
+    data = res.json()
+
+    assert data["channel3_configured"] is False
+    assert data["gemini_configured"] is False
+    assert data["paypal_configured"] is False
+
+
 def test_startup_fails_in_live_mode_with_missing_key():
     settings = Settings(
         OFFLINE_TESTS=0,
@@ -50,3 +73,27 @@ def test_startup_fails_in_live_mode_with_missing_key():
     with pytest.raises(RuntimeError) as exc_info:
         settings.validate_for_startup()
     assert "CHANNEL3_API_KEY" in str(exc_info.value)
+
+
+@pytest.mark.parametrize("bad_val", [
+    "",
+    "   ",
+    "your_channel3_api_key_here",
+    "paste_actual_key",
+    "key_placeholder_val",
+])
+def test_startup_fails_in_live_mode_with_placeholder_key(bad_val):
+    settings = Settings(
+        OFFLINE_TESTS=0,
+        CHANNEL3_API_KEY=bad_val,
+        GEMINI_API_KEY="valid-gemini-key",
+        GEMINI_MODEL="valid-model",
+        PAYPAL_CLIENT_ID="valid-id",
+        PAYPAL_CLIENT_SECRET="valid-sec",
+    )
+    with pytest.raises(RuntimeError) as exc_info:
+        settings.validate_for_startup()
+    assert "CHANNEL3_API_KEY" in str(exc_info.value)
+    # Never leak the bad value
+    if bad_val.strip():
+        assert bad_val.strip() not in str(exc_info.value)

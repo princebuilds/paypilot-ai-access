@@ -5,6 +5,22 @@ from typing import Optional
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+PLACEHOLDER_TOKENS = ("_here", "placeholder", "actual")
+
+
+def is_configured_secret(val: Optional[str]) -> bool:
+    """Check if a secret string is properly configured and not empty or a placeholder."""
+    if not val:
+        return False
+    s = val.strip().lower()
+    if not s:
+        return False
+    if s.startswith("your"):
+        return False
+    if any(token in s for token in PLACEHOLDER_TOKENS):
+        return False
+    return True
+
 
 class Settings(BaseSettings):
     """Application settings loaded from environment or .env file."""
@@ -39,8 +55,8 @@ class Settings(BaseSettings):
             ("PAYPAL_CLIENT_SECRET", self.PAYPAL_CLIENT_SECRET),
         ]
         for name, val in required_vars:
-            if not val or not str(val).strip():
-                raise RuntimeError(f"Missing required environment variable: {name}")
+            if not is_configured_secret(val):
+                raise RuntimeError(f"Missing or placeholder environment variable: {name}")
 
         if self.PAYPAL_ENV.lower() != "sandbox":
             raise RuntimeError("PAYPAL_ENV must be 'sandbox'")
