@@ -27,7 +27,7 @@ jobs:
         run: ruff check .
 
       - name: Run automated test suite (Mock only)
-        run: pytest -q
+        run: python -m pytest -q
 
       - name: Run static gate checks
         run: python scripts/static_checks.py
