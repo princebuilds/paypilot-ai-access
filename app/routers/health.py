@@ -5,9 +5,20 @@ from fastapi import APIRouter, Depends
 
 from app.config import Settings, get_settings, is_configured_secret
 from app.database import get_db
-from app.schemas import HealthResponse
+from app.schemas import ClientConfigResponse, HealthResponse
 
 router = APIRouter()
+
+
+@router.get("/config", response_model=ClientConfigResponse)
+def get_client_config(settings: Settings = Depends(get_settings)) -> ClientConfigResponse:
+    """Return runtime configuration required by client (e.g. PayPal Client ID)."""
+    client_id = settings.PAYPAL_CLIENT_ID if is_configured_secret(settings.PAYPAL_CLIENT_ID) else None
+    return ClientConfigResponse(
+        paypal_client_id=client_id,
+        currency="USD",
+        sandbox=True,
+    )
 
 
 @router.get("/health", response_model=HealthResponse)

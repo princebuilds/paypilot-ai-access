@@ -30,8 +30,14 @@ Record of decisions made during development, reasons, and any discrepancies note
 ## PayPal Integration & SDK Choice
 - **Date:** 2026-11-10
 - **SDK Generation Choice:**
-  PayPal provides legacy checkout.js, the current JavaScript SDK (`https://www.paypal.com/sdk/js`), and developer MCP / Agent Toolkits.
-  Per AGENTS.md Section 5 and current Standard Checkout documentation, PayPilot AI ACCESS pins the **PayPal JavaScript SDK** (`https://www.paypal.com/sdk/js?client-id={CLIENT_ID}&currency=USD&intent=capture`).
+  PayPal documentation describes multiple generations: legacy checkout.js (v4), the current Standard Checkout JavaScript SDK (v5), and modern merchant toolkits.
+  Current official PayPal Standard Checkout documentation:
+  - Standard Checkout Integration: https://developer.paypal.com/docs/checkout/standard/integrate/
+  - JavaScript SDK Reference: https://developer.paypal.com/sdk/js/reference/
+  Standard Checkout officially recommends the **PayPal JavaScript SDK** loaded from `https://www.paypal.com/sdk/js` which provides `paypal.Buttons()` with server-backed actions. PayPilot AI ACCESS pins this generation:
+  `https://www.paypal.com/sdk/js?client-id={PAYPAL_CLIENT_ID}&currency=USD&intent=capture&components=buttons`
+- **Dynamic Client ID Injection (No Hard-coding):**
+  Per AGENTS.md section 8 and SPEC.md section 8, the client ID must never be committed or hard-coded into static files (`static/index.html` or `static/app.js`). Instead, the frontend fetches the client ID at runtime from the server configuration (`GET /api/config`) and dynamically appends the SDK `<script>` tag.
 - **Merchant Toolkits Excluded:**
   PayPal's Agent Toolkit and MCP server (`mcp.sandbox.paypal.com`) were evaluated and intentionally excluded because they are merchant-side tools for catalog and inventory management, whereas PayPilot is a buyer-side shopping assistant where the buyer explicitly approves payments.
 - **Server-Side Money Safety Architecture:**

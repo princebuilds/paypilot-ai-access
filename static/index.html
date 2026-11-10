@@ -3,23 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PayPilot AI ACCESS</title>
+  <title>PayPilot AI ACCESS - Voice-First Shopping Assistant</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="sandbox-banner" role="region" aria-label="Demo environment notice" class="sandbox-banner">
-    <p>Sandbox payment, no real purchase. For demonstration purposes only.</p>
-  </div>
-  <header>
-    <h1>PayPilot AI ACCESS</h1>
-    <p>Shop with your voice. Understand every choice. Approve every payment.</p>
+  <!-- Accessibility Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Sandbox Environment Banner -->
+  <aside id="sandbox-banner" class="sandbox-banner" role="region" aria-label="Environment notice">
+    <div class="banner-inner">
+      <span class="banner-badge">SANDBOX DEMO</span>
+      <p class="banner-text">Sandbox payment, no real purchase. No real money moved and no order was placed with any store.</p>
+    </div>
+  </aside>
+
+  <!-- Application Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <h1 class="brand-title">PayPilot AI ACCESS</h1>
+        <p class="brand-tagline">Shop with your voice. Understand every choice. Approve every payment.</p>
+      </div>
+      <div class="header-controls">
+        <button id="tts-toggle" class="control-btn" type="button" aria-pressed="true" aria-label="Toggle voice output">
+          <span aria-hidden="true" class="btn-icon">🔊</span>
+          <span class="btn-label" id="tts-label">Voice: On</span>
+        </button>
+      </div>
+    </div>
   </header>
-  <main id="main-content">
-    <section aria-labelledby="status-heading">
-      <h2 id="status-heading">System Initializing</h2>
-      <p id="app-status">PayPilot scaffold initialized. Full interface coming in Phase B5.</p>
+
+  <!-- Main Content Landmark -->
+  <main id="main-content" tabindex="-1">
+    
+    <!-- Centralized Screen Reader Live Regions -->
+    <div id="live-announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+    <div id="live-alert" class="visually-hidden" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+    <!-- Agent Status & Message Section -->
+    <section class="agent-hero" aria-labelledby="assistant-heading">
+      <h2 id="assistant-heading" class="visually-hidden">Assistant Conversation</h2>
+      <div class="agent-avatar" aria-hidden="true">
+        <div class="pulse-ring"></div>
+        <span class="avatar-icon">🛒</span>
+      </div>
+      <div class="agent-dialogue-box">
+        <p id="agent-message" class="agent-message">Tell me what you need. You can speak or type.</p>
+        <p id="agent-state-sub" class="agent-state-sub" aria-hidden="true">Ready</p>
+      </div>
     </section>
+
+    <!-- Request Input Form Section -->
+    <section class="input-section" aria-labelledby="input-heading">
+      <h2 id="input-heading" class="visually-hidden">Search or Speak Request</h2>
+      <form id="search-form" class="search-form" novalidate>
+        <div class="form-group">
+          <label for="request-input" class="form-label">What are you looking for?</label>
+          <span id="input-hint" class="form-hint">Example: "sturdy wooden walking stick under $40" or "jar opener for weak hands under $25"</span>
+          <div class="input-with-actions">
+            <input
+              type="text"
+              id="request-input"
+              name="request"
+              class="text-input"
+              aria-describedby="input-hint"
+              placeholder="Speak or type your request..."
+              autocomplete="off"
+              required
+            >
+            <button
+              type="button"
+              id="mic-btn"
+              class="mic-btn"
+              aria-pressed="false"
+              aria-label="Start voice input"
+              title="Click to speak"
+            >
+              <span aria-hidden="true" class="mic-icon">🎙️</span>
+              <span class="mic-label">Speak</span>
+            </button>
+            <button type="submit" id="submit-btn" class="submit-btn">
+              <span>Find Products</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-row-budget">
+          <label for="budget-input" class="form-label-budget">Maximum Budget (USD, optional):</label>
+          <div class="budget-input-wrapper">
+            <span class="currency-symbol" aria-hidden="true">$</span>
+            <input
+              type="number"
+              id="budget-input"
+              name="budget"
+              class="budget-input"
+              step="0.01"
+              min="1"
+              placeholder="e.g. 40.00"
+            >
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Results Section: Product Recommendations -->
+    <section id="results-section" class="results-section" aria-labelledby="results-heading" hidden>
+      <div class="results-header">
+        <h2 id="results-heading" class="section-title">Recommended Products</h2>
+        <p id="channel3-meta" class="meta-notice"></p>
+      </div>
+      <div id="products-list" class="products-grid" role="list"></div>
+    </section>
+
+    <!-- Quote & Price Lock Section -->
+    <section id="quote-section" class="quote-section" aria-labelledby="quote-heading" hidden>
+      <div class="quote-card">
+        <div class="quote-header">
+          <h2 id="quote-heading" class="section-title">Price-Locked Quote</h2>
+          <span id="quote-timer" class="quote-badge">Locked for 10:00</span>
+        </div>
+        <div class="quote-details" id="quote-details">
+          <!-- Populated safely via DOM APIs -->
+        </div>
+        
+        <!-- Confirmation Action -->
+        <div class="confirm-box" id="confirm-box">
+          <p id="confirm-instructions" class="confirm-text">
+            Do you want to pay <strong id="confirm-total-display">$0.00</strong>? Nothing is charged until you approve in PayPal.
+          </p>
+          <div class="confirm-actions">
+            <button type="button" id="confirm-quote-btn" class="primary-btn">
+              <span>Yes, Confirm Exact Total</span>
+            </button>
+            <button type="button" id="cancel-quote-btn" class="secondary-btn">
+              <span>Cancel</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- PayPal Standard Checkout Buttons Container -->
+        <div id="paypal-container-wrapper" class="paypal-container-wrapper" hidden>
+          <p class="paypal-intro">Approve Sandbox payment below:</p>
+          <div id="paypal-button-container" class="paypal-button-container"></div>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <!-- Application Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>PayPilot AI ACCESS &bull; Built for PayPal AI Hackathon 2026 &bull; Real Channel3 Product Data &bull; PayPal Sandbox Integration</p>
+      <p class="footer-disclaimer">Retailer product links are affiliate-tracked URLs supplied by Channel3. PayPilot AI recommends; it never spends.</p>
+    </div>
+  </footer>
+
+  <!-- Application Script -->
   <script src="app.js"></script>
 </body>
 </html>

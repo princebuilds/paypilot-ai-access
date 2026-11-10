@@ -28,6 +28,13 @@ class HealthResponse(BaseModel):
     last_channel3_call_at: Optional[str] = None
 
 
+class ClientConfigResponse(BaseModel):
+    """Safe runtime client configuration for PayPal SDK initialization."""
+    paypal_client_id: Optional[str] = None
+    currency: str = "USD"
+    sandbox: bool = True
+
+
 # --- Agent Schemas ---
 class AgentRequest(BaseModel):
     """Input payload for /api/agent."""

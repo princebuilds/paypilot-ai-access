@@ -101,11 +101,11 @@
 - Recorded PayPal JS SDK standard checkout architecture decision in `docs/DECISIONS.md`.
 - Added matrix tests:
   - `tests/integration/test_matrix_02_agent_to_quote.py` (Row 2: PASS)
-  - `tests/integration/test_matrix_03_quote_refresh_currency.py` (Row 3: PASS)
-  - `tests/integration/test_matrix_04_quote_budget_confirm.py` (Row 4: PASS)
-  - `tests/integration/test_matrix_05_confirm_to_order.py` (Row 5: PASS)
-  - `tests/integration/test_matrix_06_order_paypal_payload.py` (Row 6: PASS)
-  - `tests/integration/test_matrix_07_capture_verification_receipt.py` (Row 7: PASS)
+  - `tests/integration/test_matrix_03_quote_refresh_currency.py` (Row 3: MOCK PASS, LIVE NOT RUN pending Sandbox capture)
+  - `tests/integration/test_matrix_04_quote_budget_confirm.py` (Row 4: MOCK PASS, LIVE NOT RUN pending Sandbox capture)
+  - `tests/integration/test_matrix_05_confirm_to_order.py` (Row 5: MOCK PASS, LIVE NOT RUN pending Sandbox capture)
+  - `tests/integration/test_matrix_06_order_paypal_payload.py` (Row 6: MOCK PASS, LIVE NOT RUN pending Sandbox capture)
+  - `tests/integration/test_matrix_07_capture_verification_receipt.py` (Row 7: MOCK PASS, LIVE NOT RUN pending Sandbox capture)
   - `tests/integration/test_matrix_08_session_isolation.py` (Row 8: PASS)
   - `tests/integration/test_matrix_14_failure_honesty.py` (Row 14: PASS)
   - `tests/integration/test_matrix_16_secret_leakage.py` (Row 16: PASS)
@@ -113,10 +113,42 @@
 - Gate status: **GREEN** (pytest: 73 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
 - Evidence saved: `docs/evidence/phaseB4_quotes_orders.txt`.
 
+## Phase B5: Frontend & Accessibility (Done)
+- Built `static/index.html`:
+  - Accessible skip link (`#main-content`), landmark layout (`<header>`, `<main>`, `<section>`, `<footer>`).
+  - Persistent Sandbox Demo notice banner.
+  - Centralized ARIA live regions: `#live-announcer` (`aria-live="polite"`) and `#live-alert` (`role="alert"`).
+  - Conversational hero box with assistant status dialogue.
+  - Voice input with Web Speech API and accessible text fallback transcript input.
+  - Recommended products grid with Channel3 metadata, product images, merchant domain, verified reasons, and evidence tags.
+  - Price-locked quote presentation with exact total and confirmation step.
+  - PayPal Standard Checkout container rendered only after confirmation.
+- Built `static/receipt.html`:
+  - Persistent Sandbox disclaimer banner.
+  - Safe dynamic receipt hydration via `GET /api/orders/{order_id}` using `textContent` exclusively.
+  - Status badges for `CAPTURED_VERIFIED`, `PENDING`, `FAILED`, and `CANCELLED`.
+  - Transaction breakdown table, merchant domain, timestamp, and retailer outbound link.
+- Built `static/styles.css`:
+  - WCAG 2.1 AA compliant color palette (slate on white: 15.5:1; primary blue on white: 10.5:1).
+  - High-visibility focus indicators (`outline: 3px solid #005ea6; outline-offset: 3px;`).
+  - Tap targets meeting or exceeding 44px by 44px minimum touch size.
+  - Fluid typography scaling safely up to 200%.
+  - `prefers-reduced-motion` override suppressing animations for sensitive users.
+- Built `static/app.js`:
+  - Zero unsafe DOM methods (strictly uses `textContent`, `createElement`, `setAttribute`).
+  - Money safety: browser NEVER sends price or amount to `/api/orders` or `/api/orders/{id}/capture`.
+  - Dynamic client ID injection: fetches PayPal Client ID from `GET /api/config` and loads the PayPal SDK dynamically (no hardcoding).
+  - Web Speech API integration (`SpeechRecognition`) and SpeechSynthesis TTS with toggle.
+  - Focus management: programmatically moves focus to the confirmation action upon receiving a quote.
+- Added Matrix Test:
+  - `tests/integration/test_matrix_10_frontend_api_contract.py` (Row 10: PASS)
+- Gate status: **GREEN** (pytest: 77 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
+- Evidence saved: `docs/evidence/phaseB5_frontend.txt`.
+
 ## Current Status
-- **Current Phase:** Phase B4 Complete (Awaiting User Sandbox Credentials for Live Create-Order Test, then Phase B5 Frontend)
+- **Current Phase:** Phase B5 Complete (Awaiting User Re-entry of PayPal Sandbox Credentials for Live Create-Order Verification)
 - **Gate Status:**
-  - `pytest -m 'not live'`: PASS (73 passed, 1 deselected in 11.65s)
+  - `pytest -m 'not live'`: PASS (77 passed, 1 deselected in 11.58s)
   - `python scripts/static_checks.py`: PASS (18 pass, 0 warn, 0 fail)
   - `ruff check .`: PASS (All checks passed)
 
@@ -127,14 +159,14 @@
 |---|---|---|---|
 | 1 | Agent, grounding, database | PASS | `docs/evidence/phaseB3_gemini_grounding.txt` |
 | 2 | Agent to quote | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
-| 3 | Quote, Channel3 refresh, currency | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
-| 4 | Quote, budget, confirm | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
-| 5 | Confirm to order | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
-| 6 | Order to PayPal payload | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
-| 7 | Capture, verification, receipt | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 3 | Quote, Channel3 refresh, currency | MOCK PASS, LIVE NOT RUN | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 4 | Quote, budget, confirm | MOCK PASS, LIVE NOT RUN | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 5 | Confirm to order | MOCK PASS, LIVE NOT RUN | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 6 | Order to PayPal payload | MOCK PASS, LIVE NOT RUN | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 7 | Capture, verification, receipt | MOCK PASS, LIVE NOT RUN | `docs/evidence/phaseB4_quotes_orders.txt` |
 | 8 | Session isolation | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
 | 9 | Rate limit | PASS | `docs/evidence/phaseB1_platform_core.txt` |
-| 10 | Frontend and API contract | NOT RUN | |
+| 10 | Frontend and API contract | PASS | `docs/evidence/phaseB5_frontend.txt` |
 | 11 | CSP, PayPal SDK, images | NOT RUN | |
 | 12 | Voice and keyboard fallback | NOT RUN | |
 | 13 | Startup, model pin, health | PASS | `docs/evidence/phaseB1_platform_core.txt` |

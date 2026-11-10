@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Receipt - PayPilot AI ACCESS</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Sandbox Environment Banner -->
+  <aside id="sandbox-banner" class="sandbox-banner" role="region" aria-label="Environment notice">
+    <div class="banner-inner">
+      <span class="banner-badge">SANDBOX DEMO</span>
+      <p class="banner-text">Sandbox payment, no real purchase. No real money moved and no order was placed with any store.</p>
+    </div>
+  </aside>
+
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <h1 class="brand-title">PayPilot AI ACCESS</h1>
+        <p class="brand-tagline">Sandbox Payment Receipt & Verification</p>
+      </div>
+      <div>
+        <a href="/" class="control-btn nav-link-btn">← New Request</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section class="receipt-section" aria-labelledby="receipt-heading">
+      <div class="receipt-card">
+        <div class="receipt-header">
+          <div id="status-icon" class="receipt-status-icon" aria-hidden="true">✓</div>
+          <div>
+            <h2 id="receipt-heading" class="receipt-title">Payment Summary</h2>
+            <p id="receipt-status-badge" class="status-badge status-verified">VERIFIED</p>
+          </div>
+        </div>
+
+        <div id="receipt-message-box" class="receipt-message-box" role="status">
+          <p id="receipt-message" class="receipt-message">Loading receipt...</p>
+        </div>
+
+        <div class="receipt-table-wrapper">
+          <table class="receipt-table">
+            <caption class="visually-hidden">Order and payment transaction details</caption>
+            <tbody>
+              <tr>
+                <th scope="row">Internal Order ID</th>
+                <td id="rcpt-order-id">-</td>
+              </tr>
+              <tr>
+                <th scope="row">PayPal Capture ID</th>
+                <td id="rcpt-capture-id">-</td>
+              </tr>
+              <tr>
+                <th scope="row">Payment Environment</th>
+                <td><span class="sandbox-tag">PayPal Sandbox (USD)</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Product Name</th>
+                <td id="rcpt-title">-</td>
+              </tr>
+              <tr>
+                <th scope="row">Merchant Domain</th>
+                <td id="rcpt-merchant">-</td>
+              </tr>
+              <tr>
+                <th scope="row">Quantity</th>
+                <td id="rcpt-quantity">-</td>
+              </tr>
+              <tr>
+                <th scope="row">Unit Price</th>
+                <td id="rcpt-unit-price">-</td>
+              </tr>
+              <tr class="total-row">
+                <th scope="row">Captured Total</th>
+                <td id="rcpt-total" class="rcpt-total-val">-</td>
+              </tr>
+              <tr>
+                <th scope="row">Timestamp</th>
+                <td id="rcpt-timestamp">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="retailer-link-box" class="retailer-link-box" hidden>
+          <p class="retailer-note">Want to inspect the real item at the merchant?</p>
+          <a id="rcpt-retailer-url" href="#" target="_blank" rel="noopener noreferrer" class="retailer-btn">
+            <span>View on Retailer Website</span>
+            <span aria-hidden="true"> ↗</span>
+          </a>
+        </div>
+
+        <div class="receipt-actions">
+          <a href="/" class="primary-btn receipt-back-btn">Start Another Search</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>PayPilot AI ACCESS &bull; PayPal AI Hackathon 2026 &bull; Server-side Capture & Verification</p>
+      <p class="footer-disclaimer">Sandbox environment: no real charge made, no store fulfilment initiated.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Receipt page loader: fetches GET /api/orders/{order_id} safely
+    document.addEventListener("DOMContentLoaded", async () => {
+      const params = new URLSearchParams(window.location.search);
+      const orderId = params.get("order");
+
+      const msgEl = document.getElementById("receipt-message");
+      const badgeEl = document.getElementById("receipt-status-badge");
+      const iconEl = document.getElementById("status-icon");
+
+      if (!orderId) {
+        msgEl.textContent = "No order ID specified. Return to the homepage to shop.";
+        badgeEl.textContent = "NOT FOUND";
+        badgeEl.className = "status-badge status-failed";
+        iconEl.textContent = "!";
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/orders/" + encodeURIComponent(orderId));
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          const errMsg = err.error ? err.error.message : "Failed to load order.";
+          msgEl.textContent = errMsg;
+          badgeEl.textContent = "ERROR";
+          badgeEl.className = "status-badge status-failed";
+          iconEl.textContent = "!";
+          return;
+        }
+
+        const data = await res.json();
+        
+        // Populate fields via textContent exclusively
+        document.getElementById("rcpt-order-id").textContent = data.order_id || "-";
+        document.getElementById("rcpt-capture-id").textContent = data.paypal_capture_id || "(Pending / None)";
+        document.getElementById("rcpt-title").textContent = data.title || "-";
+        document.getElementById("rcpt-merchant").textContent = data.merchant_domain || "-";
+        document.getElementById("rcpt-quantity").textContent = String(data.quantity || 1);
+        document.getElementById("rcpt-unit-price").textContent = "$" + (data.unit_price || "0.00") + " " + (data.currency || "USD");
+        document.getElementById("rcpt-total").textContent = "$" + (data.total || "0.00") + " " + (data.currency || "USD");
+        document.getElementById("rcpt-timestamp").textContent = data.captured_at ? new Date(data.captured_at).toLocaleString() : new Date().toLocaleString();
+
+        msgEl.textContent = data.message || "Payment processed.";
+
+        // Status badge styling
+        if (data.status === "CAPTURED_VERIFIED") {
+          badgeEl.textContent = "VERIFIED";
+          badgeEl.className = "status-badge status-verified";
+          iconEl.textContent = "✓";
+        } else if (data.status === "PENDING") {
+          badgeEl.textContent = "PENDING";
+          badgeEl.className = "status-badge status-pending";
+          iconEl.textContent = "⏳";
+        } else if (data.status === "CANCELLED") {
+          badgeEl.textContent = "CANCELLED";
+          badgeEl.className = "status-badge status-cancelled";
+          iconEl.textContent = "✕";
+        } else {
+          badgeEl.textContent = "FAILED";
+          badgeEl.className = "status-badge status-failed";
+          iconEl.textContent = "✕";
+        }
+
+        // Retailer link if available
+        if (data.retailer_url) {
+          const linkEl = document.getElementById("rcpt-retailer-url");
+          linkEl.href = data.retailer_url;
+          document.getElementById("retailer-link-box").hidden = false;
+        }
+      } catch (e) {
+        msgEl.textContent = "Network error loading receipt. Please refresh or try again.";
+        badgeEl.textContent = "ERROR";
+        badgeEl.className = "status-badge status-failed";
+        iconEl.textContent = "!";
+      }
+    });
+  </script>
+</body>
+</html>
