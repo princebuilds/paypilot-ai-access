@@ -36,15 +36,16 @@
 - Built `app/routers/health.py`: `/api/health` returning operational status booleans and safe metadata only.
 - Built stub routers (`app/routers/agent.py`, `app/routers/quotes.py`, `app/routers/orders.py`) returning `NOT_IMPLEMENTED`.
 - Mounted `static/` at `/` in `app/main.py`.
-- Unit tests added: `tests/unit/test_config.py`, `tests/unit/test_security.py`.
-- Integration tests added: `test_matrix_08_session_isolation.py`, `test_matrix_09_rate_limit.py`, `test_matrix_13_startup_model_health.py`, `test_matrix_16_secret_leakage.py`.
-- Gate status: **GREEN** (pytest: 13 passed, static_checks: 18 pass, ruff: all passed).
+- Fixed placeholder detection in `config.py` and `/api/health`: reject values starting with "your" or containing "_here", "placeholder", "actual".
+- Unit tests added: `tests/unit/test_config.py`, `tests/unit/test_security.py`, `tests/unit/test_channel3_parser.py`.
+- Integration tests added: `test_matrix_08_session_isolation.py`, `test_matrix_09_rate_limit.py`, `test_matrix_13_startup_model_health.py`, `test_matrix_16_secret_leakage.py`, `test_channel3_mock.py`.
+- Gate status: **GREEN** (pytest: 38 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
 - Evidence saved: `docs/evidence/phaseB1_platform_core.txt`.
 
 ## Current Status
-- **Current Phase:** HUMAN STEP A (Create .env) -> Phase B2 (Real Channel3 integration)
+- **Current Phase:** HUMAN STEP B (Save real Channel3 key to .env & run live smoke test)
 - **Gate Status:**
-  - `pytest -m 'not live'`: PASS (13 passed in 0.77s)
+  - `pytest -m 'not live'`: PASS (38 passed, 1 deselected)
   - `python scripts/static_checks.py`: PASS (18 pass, 0 warn, 0 fail)
   - `ruff check .`: PASS (All checks passed)
 
