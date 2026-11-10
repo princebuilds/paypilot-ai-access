@@ -215,7 +215,7 @@ class Channel3Client:
         body: Dict[str, Any] = {"query": query, "limit": limit}
         filters: Dict[str, Any] = {}
         if max_price is not None:
-            filters["price.max_price"] = max_price
+            filters["price"] = {"max_price": float(max_price)}
         if in_stock_only:
             filters["availability"] = ["InStock"]
         if filters:

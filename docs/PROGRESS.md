@@ -42,10 +42,21 @@
 - Gate status: **GREEN** (pytest: 38 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
 - Evidence saved: `docs/evidence/phaseB1_platform_core.txt`.
 
+## Phase B2: Real Channel3 Integration (Done)
+- Live Channel3 search and detail API calls executed and verified via `scripts/live_smoke_test.py --channel3`.
+- Raw responses sanitized and saved to `tests/fixtures/channel3_search_real.json` and `tests/fixtures/channel3_product_real.json`. Verified zero secret keys or auth headers present.
+- Discovered and fixed wire schema discrepancy: Channel3 search requires nested price filter `{"price": {"max_price": float}}` rather than flat dot-notation. Recorded in `docs/DECISIONS.md`.
+- Defensive offer parser tested against all real fixture products; handles nested `price.price` and `price.currency` structures.
+- Verified grounding evidence fields: `title` and `description` are 100% present with rich factual details, and `materials` is present. `SPEC.md` grounding contract preserved.
+- Executed and validated all 3 demo queries with real API calls and caching: results recorded in `docs/DEMO_QUERIES.md`. All 3 return in-stock, USD, under-budget products.
+- Created `tests/integration/test_channel3_real_fixtures.py` verifying real fixture parsing.
+- Gate status: **GREEN** (pytest: 40 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed). Evidence saved in `docs/evidence/phaseB2_channel3.txt`.
+- Tag: `v0.1.0`.
+
 ## Current Status
-- **Current Phase:** HUMAN STEP B (Save real Channel3 key to .env & run live smoke test)
+- **Current Phase:** Phase B3 (Gemini agent and grounding)
 - **Gate Status:**
-  - `pytest -m 'not live'`: PASS (38 passed, 1 deselected)
+  - `pytest -m 'not live'`: PASS (40 passed, 1 deselected)
   - `python scripts/static_checks.py`: PASS (18 pass, 0 warn, 0 fail)
   - `ruff check .`: PASS (All checks passed)
 

@@ -1,0 +1,113 @@
+{
+  "id": "7V1UUgC",
+  "title": "Natural Wood Walking Stick",
+  "description": "Upgrade your outdoor gear with RMS Natural Wood Walking Stick 55 . It s carefully hand picked and hand crafted to bring out it s natural beauty and rustic look and feel. The wooden trekking pole measures 55 tall 2 in diameter and weighs 1.8 lbs. The rubber tip at bottom is durable and anti-skid so that you can walk on any surfaces. It s great for those with limited mobility or disability who may need support when walking.The wooden hiking stick is cut dried sanded and then sprayed with a clear shiny and weatherproof coating. It also includes a RMS limited lifetime warranty.",
+  "brands": [
+    {
+      "id": "qCjT",
+      "name": "RMS"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://cdn.trychannel3.com/e02dc8c8-2de8-4cad-b0d9-18af21fb5426?aid=01M71JQSKQPAEJF8XDH1P55XFQ&mid=BsaX",
+      "cleaned_url": null,
+      "is_main_image": true,
+      "shot_type": "hero",
+      "alt_text": "Close-up of a dark, carved wooden walking stick handle and shaft."
+    }
+  ],
+  "category": {
+    "slug": "walking-sticks",
+    "title": "Walking Sticks",
+    "path": [
+      {
+        "slug": "health-beauty",
+        "title": "Health & Beauty"
+      },
+      {
+        "slug": "health-care",
+        "title": "Health Care"
+      },
+      {
+        "slug": "mobility-accessibility",
+        "title": "Mobility & Accessibility"
+      },
+      {
+        "slug": "walking-aids",
+        "title": "Walking Aids"
+      },
+      {
+        "slug": "canes-walking-sticks",
+        "title": "Canes & Walking Sticks"
+      },
+      {
+        "slug": "walking-sticks",
+        "title": "Walking Sticks"
+      }
+    ],
+    "has_children": false
+  },
+  "gender": null,
+  "age": "adult",
+  "materials": [
+    "Wood",
+    "Rubber"
+  ],
+  "key_features": "[REDACTED]",
+  "colors": [],
+  "offers": [
+    {
+      "url": "https://buy.trychannel3.com/7V1UUgC-BsaX-jQ8oEp?o=01M383A34BNZ2CFXSAPJB6KQXW&aid=01M71JQSKQPAEJF8XDH1P55XFQ",
+      "domain": "walmart.com",
+      "price": {
+        "price": 39.99,
+        "compare_at_price": null,
+        "currency": "USD"
+      },
+      "availability": "InStock",
+      "condition": "new",
+      "max_commission_rate": 0.07,
+      "dimensions": {
+        "length": {
+          "number": 55.0,
+          "unit": "in"
+        },
+        "width": {
+          "number": 2.0,
+          "unit": "in"
+        },
+        "height": null,
+        "weight": {
+          "number": 1.8,
+          "unit": "lb"
+        }
+      }
+    }
+  ],
+  "variants": null,
+  "structured_attributes": {
+    "height-adjustment": [
+      "Fixed height"
+    ],
+    "lumber-wood-type": [
+      "Wood"
+    ],
+    "portability": [
+      "Portable"
+    ],
+    "pattern": [
+      "Solid"
+    ],
+    "material": [
+      "Wood"
+    ],
+    "cane-base-design": [
+      "Single point"
+    ],
+    "handle-material": [
+      "Wood"
+    ]
+  },
+  "ratings": null
+}

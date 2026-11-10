@@ -16,3 +16,13 @@ Record of decisions made during development, reasons, and any discrepancies note
   - `opentelemetry-api`: Sub-dependency of `fastapi` 0.162+.
   - `pycparser`: Sub-dependency of `cffi`.
   - `truststore`: Sub-dependency of `httpx2` / `google-genai` for platform trust store SSL certificates.
+
+## Channel3 API Discoveries
+- **Date:** 2026-11-10
+- **Filter Structure Discrepancy:**
+  The Channel3 documentation wrote `filters: price.max_price`. In actual wire execution, sending a flat key `"price.max_price"` in `filters` causes an HTTP 422 error (`extra_forbidden`). The required schema is nested dictionary:
+  `{"filters": {"price": {"max_price": float_val}}}`.
+- **Offer Price Structure:**
+  Real API responses confirm offers represent price as an object:
+  `{"price": {"price": float_val, "currency": "USD", "compare_at_price": ...}}`.
+  The top-level offer dictionary has `"currency": null`. The defensive parser handles this nested shape seamlessly.

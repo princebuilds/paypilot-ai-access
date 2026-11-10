@@ -21,11 +21,12 @@ from app.config import get_settings
 
 
 def sanitize_dict(obj):
-    """Recursively strip any key or token strings from dictionaries."""
+    """Recursively strip any API key or token strings from dictionaries."""
     if isinstance(obj, dict):
         clean = {}
         for k, v in obj.items():
-            if any(s in k.lower() for s in ("key", "secret", "token", "auth")):
+            k_lower = k.lower()
+            if any(s in k_lower for s in ("api_key", "secret", "password", "auth", "x-api-key")) or k_lower in ("token", "access_token"):
                 clean[k] = "[REDACTED]"
             else:
                 clean[k] = sanitize_dict(v)

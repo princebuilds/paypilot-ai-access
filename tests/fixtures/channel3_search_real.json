@@ -1,0 +1,480 @@
+{
+  "products": [
+    {
+      "id": "7V1UUgC",
+      "title": "Natural Wood Walking Stick",
+      "description": "Upgrade your outdoor gear with RMS Natural Wood Walking Stick 55 . It s carefully hand picked and hand crafted to bring out it s natural beauty and rustic look and feel. The wooden trekking pole measures 55 tall 2 in diameter and weighs 1.8 lbs. The rubber tip at bottom is durable and anti-skid so that you can walk on any surfaces. It s great for those with limited mobility or disability who may need support when walking.The wooden hiking stick is cut dried sanded and then sprayed with a clear shiny and weatherproof coating. It also includes a RMS limited lifetime warranty.",
+      "brands": [
+        {
+          "id": "qCjT",
+          "name": "RMS"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/e02dc8c8-2de8-4cad-b0d9-18af21fb5426?aid=01M71JQRYKGG6W819CVHZT74ZN&mid=BsaX",
+          "cleaned_url": null,
+          "is_main_image": true,
+          "shot_type": "hero",
+          "alt_text": "Close-up of a dark, carved wooden walking stick handle and shaft."
+        }
+      ],
+      "category": {
+        "slug": "walking-sticks",
+        "title": "Walking Sticks",
+        "path": [
+          {
+            "slug": "health-beauty",
+            "title": "Health & Beauty"
+          },
+          {
+            "slug": "health-care",
+            "title": "Health Care"
+          },
+          {
+            "slug": "mobility-accessibility",
+            "title": "Mobility & Accessibility"
+          },
+          {
+            "slug": "walking-aids",
+            "title": "Walking Aids"
+          },
+          {
+            "slug": "canes-walking-sticks",
+            "title": "Canes & Walking Sticks"
+          },
+          {
+            "slug": "walking-sticks",
+            "title": "Walking Sticks"
+          }
+        ],
+        "has_children": false
+      },
+      "gender": null,
+      "age": "adult",
+      "materials": [
+        "Wood",
+        "Rubber"
+      ],
+      "key_features": "[REDACTED]",
+      "colors": [],
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/7V1UUgC-BsaX-jQ8oEp?o=01M383A34BNZ2CFXSAPJB6KQXW&aid=01M71JQRYKGG6W819CVHZT74ZN",
+          "domain": "walmart.com",
+          "price": {
+            "price": 39.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock",
+          "condition": "new",
+          "max_commission_rate": 0.07,
+          "dimensions": {
+            "length": {
+              "number": 55.0,
+              "unit": "in"
+            },
+            "width": {
+              "number": 2.0,
+              "unit": "in"
+            },
+            "height": null,
+            "weight": {
+              "number": 1.8,
+              "unit": "lb"
+            }
+          }
+        }
+      ],
+      "variants": null,
+      "structured_attributes": {
+        "height-adjustment": [
+          "Fixed height"
+        ],
+        "lumber-wood-type": [
+          "Wood"
+        ],
+        "portability": [
+          "Portable"
+        ],
+        "pattern": [
+          "Solid"
+        ],
+        "material": [
+          "Wood"
+        ],
+        "cane-base-design": [
+          "Single point"
+        ],
+        "handle-material": [
+          "Wood"
+        ]
+      },
+      "ratings": null
+    },
+    {
+      "id": "k68aocH",
+      "title": "Wooden Cane Walking Stick",
+      "description": "This handcrafted walking cane is made from natural wood, featuring a stylish wave design and a polished camel brown finish. It is designed for both men and women and includes an ergonomic crook handle for a comfortable grip and an anti-slip rubber stopper at the base for enhanced stability. Measuring 35 inches in height, this lightweight cane is suitable for indoor and outdoor use, providing support for mobility issues, recovery, or as a fashionable accessory.",
+      "brands": [
+        {
+          "id": "ekyH",
+          "name": "Charlton Home\u00ae"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/e88b7e2f-aef1-443c-b2ba-daefbe0d13da?aid=01M71JQRYKGG6W819CVHZT74ZN&mid=BIP9",
+          "cleaned_url": null,
+          "is_main_image": true,
+          "shot_type": "hero",
+          "alt_text": "Wooden cane with a curved handle and textured shaft on white."
+        },
+        {
+          "url": "https://cdn.trychannel3.com/e3f0cc61-b8fa-410e-98ad-fcfcf227b10b?aid=01M71JQRYKGG6W819CVHZT74ZN&mid=BIP9",
+          "cleaned_url": null,
+          "is_main_image": false,
+          "shot_type": "hero",
+          "alt_text": "Close-up of the curved top of a wooden cane."
+        },
+        {
+          "url": "https://cdn.trychannel3.com/03e98962-34f4-4247-b13a-93aab7b0d579?aid=01M71JQRYKGG6W819CVHZT74ZN&mid=BIP9",
+          "cleaned_url": null,
+          "is_main_image": false,
+          "shot_type": "detail",
+          "alt_text": "Close-up of the textured pattern on the wooden cane shaft."
+        }
+      ],
+      "category": {
+        "slug": "walking-sticks",
+        "title": "Walking Sticks",
+        "path": [
+          {
+            "slug": "health-beauty",
+            "title": "Health & Beauty"
+          },
+          {
+            "slug": "health-care",
+            "title": "Health Care"
+          },
+          {
+            "slug": "mobility-accessibility",
+            "title": "Mobility & Accessibility"
+          },
+          {
+            "slug": "walking-aids",
+            "title": "Walking Aids"
+          },
+          {
+            "slug": "canes-walking-sticks",
+            "title": "Canes & Walking Sticks"
+          },
+          {
+            "slug": "walking-sticks",
+            "title": "Walking Sticks"
+          }
+        ],
+        "has_children": false
+      },
+      "gender": null,
+      "age": "adult",
+      "materials": [
+        "Wood"
+      ],
+      "key_features": "[REDACTED]",
+      "colors": [
+        {
+          "hex": "#9b5617",
+          "percentage": 0.4186
+        },
+        {
+          "hex": "#8c592c",
+          "percentage": 0.2619
+        },
+        {
+          "hex": "#ebd5bf",
+          "percentage": 0.1285
+        },
+        {
+          "hex": "#ba9575",
+          "percentage": 0.1218
+        },
+        {
+          "hex": "#673511",
+          "percentage": 0.0692
+        }
+      ],
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/k68aocH-BIP9-jQ8oEp?o=01M21SDMFB627F2SD2ZP0JP704&aid=01M71JQRYKGG6W819CVHZT74ZN",
+          "domain": "wayfair.com",
+          "price": {
+            "price": 24.99,
+            "compare_at_price": 31.99,
+            "currency": "USD"
+          },
+          "availability": "InStock",
+          "condition": "new",
+          "max_commission_rate": 0.0,
+          "dimensions": {
+            "length": {
+              "number": 35.0,
+              "unit": "in"
+            },
+            "width": {
+              "number": 1.2,
+              "unit": "in"
+            },
+            "height": {
+              "number": 35.0,
+              "unit": "in"
+            },
+            "weight": {
+              "number": 2.0,
+              "unit": "lb"
+            }
+          }
+        }
+      ],
+      "variants": null,
+      "structured_attributes": {
+        "pattern": [
+          "Swirl"
+        ],
+        "cane-base-design": [
+          "Single point"
+        ],
+        "portability": [
+          "Portable"
+        ],
+        "mobility-accessibility-equipment-features": [
+          "Anti-slip",
+          "Ergonomic design",
+          "Lightweight",
+          "Weather resistant"
+        ],
+        "height-adjustment": [
+          "Fixed height"
+        ],
+        "material": [
+          "Wood"
+        ],
+        "wood-finish": [
+          "Lacquered/varnished"
+        ],
+        "lumber-wood-type": [
+          "Wood"
+        ],
+        "handle-material": [
+          "Wood"
+        ],
+        "walking-aid-tip-type": [
+          "Standard rubber"
+        ],
+        "handle-style": [
+          "Crook"
+        ]
+      },
+      "ratings": null
+    },
+    {
+      "id": "N9sLwnn",
+      "title": "Straight Pine Walking Stick",
+      "description": "The Brazos Traditional Straight Pine Walking Stick is a lightweight and durable walking aid handcrafted from a solid piece of majestic pine harvested from central Texas. Designed for versatility, it is an ideal choice for elderly family members or casual strolls through neighborhoods and forests. The stick is carefully sanded with fine-grit sandpaper and stained a beautiful brown to highlight the natural beauty of the wood. It features a comfortable Trekker-style handle, weighs less than 1 lb, and can support up to 250 lbs. For enhanced safety and longevity, it is equipped with a slip-resistant tip.",
+      "brands": [
+        {
+          "id": "mcgM",
+          "name": "Brazos"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/f0a9ab5b-af5e-47a8-9128-a3d9b409f6f6?aid=01M71JQRYKGG6W819CVHZT74ZN&mid=7Nxp",
+          "cleaned_url": null,
+          "is_main_image": true,
+          "shot_type": "hero",
+          "alt_text": "Walking stick with cord wrap and wooden shaft shown vertically."
+        },
+        {
+          "url": "https://cdn.trychannel3.com/756c52fa-1ec4-4a09-a674-34b14080e6e5?aid=01M71JQRYKGG6W819CVHZT74ZN&mid=7Nxp",
+          "cleaned_url": null,
+          "is_main_image": false,
+          "shot_type": "product_information",
+          "alt_text": "Features of walking stick: lightweight, weight limit, and grip durability."
+        },
+        {
+          "url": "https://cdn.trychannel3.com/7ab8bde3-87ab-432d-ba80-33c1f2b9f3b7?aid=01M71JQRYKGG6W819CVHZT74ZN&mid=7Nxp",
+          "cleaned_url": null,
+          "is_main_image": false,
+          "shot_type": "product_information",
+          "alt_text": "Information about pine material and use for walking sticks."
+        },
+        {
+          "url": "https://cdn.trychannel3.com/1da7ba64-d04f-4280-9fe8-edaaf1595f24?aid=01M71JQRYKGG6W819CVHZT74ZN&mid=7Nxp",
+          "cleaned_url": null,
+          "is_main_image": false,
+          "shot_type": "size_chart",
+          "alt_text": "Diagram showing walking stick size recommendations by body height."
+        },
+        {
+          "url": "https://cdn.trychannel3.com/0751b69c-4351-4d51-8384-d26d62561384?aid=01M71JQRYKGG6W819CVHZT74ZN&mid=7Nxp",
+          "cleaned_url": null,
+          "is_main_image": false,
+          "shot_type": "lifestyle",
+          "alt_text": "Hand holding the handle of a trekking style walking stick outdoors."
+        },
+        {
+          "url": "https://cdn.trychannel3.com/35e486bc-a27b-4089-a5f4-4ae8d1a22fbe?aid=01M71JQRYKGG6W819CVHZT74ZN&mid=7Nxp",
+          "cleaned_url": null,
+          "is_main_image": false,
+          "shot_type": "hero",
+          "alt_text": "Close-up of a handcrafted walking stick leaning against a tree."
+        }
+      ],
+      "category": {
+        "slug": "walking-sticks",
+        "title": "Walking Sticks",
+        "path": [
+          {
+            "slug": "health-beauty",
+            "title": "Health & Beauty"
+          },
+          {
+            "slug": "health-care",
+            "title": "Health Care"
+          },
+          {
+            "slug": "mobility-accessibility",
+            "title": "Mobility & Accessibility"
+          },
+          {
+            "slug": "walking-aids",
+            "title": "Walking Aids"
+          },
+          {
+            "slug": "canes-walking-sticks",
+            "title": "Canes & Walking Sticks"
+          },
+          {
+            "slug": "walking-sticks",
+            "title": "Walking Sticks"
+          }
+        ],
+        "has_children": false
+      },
+      "gender": null,
+      "age": "adult",
+      "materials": [
+        "pine"
+      ],
+      "key_features": "[REDACTED]",
+      "colors": [
+        {
+          "hex": "#847d6f",
+          "percentage": 0.3825
+        },
+        {
+          "hex": "#a29c8e",
+          "percentage": 0.2653
+        },
+        {
+          "hex": "#4d4036",
+          "percentage": 0.1259
+        },
+        {
+          "hex": "#686253",
+          "percentage": 0.1143
+        },
+        {
+          "hex": "#3e2314",
+          "percentage": 0.1119
+        }
+      ],
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/N9sLwnn-7Nxp-jQ8oEp?o=01M1J1KWE0H9CPNBH5VDX2SCC4&aid=01M71JQRYKGG6W819CVHZT74ZN",
+          "domain": "tractorsupply.com",
+          "price": {
+            "price": 24.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock",
+          "condition": "new",
+          "max_commission_rate": 0.03,
+          "dimensions": {
+            "length": {
+              "number": 55.0,
+              "unit": "in"
+            },
+            "width": null,
+            "height": null,
+            "weight": null
+          }
+        },
+        {
+          "url": "https://buy.trychannel3.com/N9sLwnn-jlW4-jQ8oEp?o=01M3BJ8SNVRBZ8AA693Q2E7V5Q&aid=01M71JQRYKGG6W819CVHZT74ZN",
+          "domain": "campingworld.com",
+          "price": {
+            "price": 49.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock",
+          "condition": "new",
+          "max_commission_rate": 0.084,
+          "dimensions": {
+            "length": null,
+            "width": null,
+            "height": null,
+            "weight": {
+              "number": 2.0,
+              "unit": "lb"
+            }
+          }
+        }
+      ],
+      "variants": null,
+      "structured_attributes": {
+        "cane-base-design": [
+          "Single point"
+        ],
+        "lumber-wood-type": [
+          "Pine wood"
+        ],
+        "wood-finish": [
+          "Lacquered/varnished"
+        ],
+        "mobility-accessibility-equipment-features": [
+          "Anti-slip",
+          "Lightweight"
+        ],
+        "handle-material": [
+          "Wood"
+        ],
+        "material": [
+          "Wood"
+        ],
+        "walking-aid-tip-type": [
+          "Standard rubber"
+        ],
+        "portability": [
+          "Portable"
+        ],
+        "pattern": [
+          "Solid"
+        ],
+        "height-adjustment": [
+          "Fixed height"
+        ]
+      },
+      "ratings": {
+        "value": 4.75,
+        "count": 8,
+        "source_count": 1
+      }
+    }
+  ],
+  "next_page_token": "[REDACTED]"
+}
