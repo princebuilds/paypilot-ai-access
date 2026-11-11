@@ -205,14 +205,29 @@
   - Saved real sanitized PayPal responses to `tests/fixtures/paypal_create_real.json` and `tests/fixtures/paypal_capture_real.json` (zero secrets, zero tokens).
   - Updated integration tests in `test_matrix_06_order_paypal_payload.py` and `test_matrix_07_capture_verification_receipt.py` to validate against real sanitized fixtures.
 - Traceability:
-  - Matrix Rows 6 and 7 updated to **LIVE PASS**.
+  - Matrix Rows 6 and 7 updated to **LIVE PASS** (script verified).
+  - Rows 4 and 5 await user confirmation of the in-app purchase flow.
 - Evidence logged: `docs/LIVE_TEST_REPORT.md`.
 - Gate status: **GREEN** (pytest: 92 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
 
+## Feature Additions & Deployment Prep (Done)
+- **Feature 1 (Retailer Clarity):** Added "Sold by <retailer>" attribution and affiliate notice that buy links open retailers via Channel3. Verified across all cards.
+- **Feature 2 ("What the assistant did" Activity Panel):**
+  - Server-side activity audit trail (`app/activity.py`, `app/routers/activity.py`) reading SQLite tables (`searches`, `grounding_runs`, `quotes`, `orders`, `payment_events`).
+  - Verified zero secrets leakage (`sanitize_event_detail`), deterministic human-readable copy, and session isolation.
+  - Accessible expandable UI (`aria-expanded`, keyboard support, `textContent` only) integrated on both search results view (`static/index.html`, `static/app.js`) and receipt view (`static/receipt.html`).
+  - Integration tests in `tests/integration/test_activity_panel.py` passing (4 tests).
+- **Render Deployment Prep:**
+  - Configured `render.yaml` Blueprint with Python 3.13.0, secret environment variable names only (`sync: false`), generous judge rate limits (`RATE_LIMIT_PER_HOUR: "120"`), and health check path `/api/health`.
+  - Updated `README.md` with step-by-step Render Blueprint deployment guide.
+  - Paused Features 3, 4, 5 pending hosted app deployment and verification.
+- Gate status: **GREEN** (pytest: 97 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: clean; CI: green on commit `926684d`).
+
 ## Current Status
-- **Current Phase:** Phase B6 Complete (Live PayPal Sandbox Verified). Ready for User Confirmation of In-App Flow & Features 1-5.
+- **Current Phase:** Feature 2 & Render Deploy Prep Complete.
+- **Awaiting:** User confirmation of hosted deployment / in-app purchase flow before resuming Features 3 (Price range), 4 (See more options), and 5 (Discounts).
 - **Gate Status:**
-  - `pytest -m 'not live'`: PASS (92 passed, 1 deselected in 13.16s)
+  - `pytest -m 'not live'`: PASS (97 passed, 1 deselected)
   - `python scripts/static_checks.py`: PASS (18 pass, 0 warn, 0 fail)
   - `ruff check .`: PASS (All checks passed)
 
