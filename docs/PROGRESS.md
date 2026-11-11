@@ -188,10 +188,31 @@
     - Run automated test suite (Mock only): **PASS** (90 passed, 1 deselected)
     - Run static gate checks: **PASS** (18 pass, 0 warn, 0 fail)
 
+## Phase B6: Live PayPal Sandbox Checkout & Capture (Done)
+- Extended `scripts/live_smoke_test.py`:
+  - Added `--paypal-full` supporting order creation, approval polling, and capture verification.
+  - Added `--paypal-capture <ORDER_ID>` for immediate verified capture of pre-approved PayPal orders.
+- Verified Live End-to-End Flow:
+  - Created Sandbox Order `3UW01444V17150529` (Internal Order ID: `smoke_full_20261111081747`, Create Debug ID: `f7940081a1db0`).
+  - Buyer approval completed on PayPal Sandbox with US buyer John Doe (`sb-brokb53858327@personal.example.com`).
+  - Capture executed via PayPal API (Capture ID: `67554967LV746964H`, Capture Debug ID: `f3705970501bf`).
+  - Verified all 4 non-negotiable invariants:
+    1. Order status is `COMPLETED`
+    2. Capture status is `COMPLETED`
+    3. Amount and currency match stored quote (`$39.99 USD`)
+    4. `custom_id` matches internal order ID (`smoke_full_20261111081747`)
+- Sanitized Real Fixtures Saved:
+  - Saved real sanitized PayPal responses to `tests/fixtures/paypal_create_real.json` and `tests/fixtures/paypal_capture_real.json` (zero secrets, zero tokens).
+  - Updated integration tests in `test_matrix_06_order_paypal_payload.py` and `test_matrix_07_capture_verification_receipt.py` to validate against real sanitized fixtures.
+- Traceability:
+  - Matrix Rows 6 and 7 updated to **LIVE PASS**.
+- Evidence logged: `docs/LIVE_TEST_REPORT.md`.
+- Gate status: **GREEN** (pytest: 92 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: all passed).
+
 ## Current Status
-- **Current Phase:** Phase B5 Complete and Fully Verified (Awaiting User Re-entry of PayPal Sandbox Credentials for Live Create-Order Verification)
+- **Current Phase:** Phase B6 Complete (Live PayPal Sandbox Verified). Ready for User Confirmation of In-App Flow & Features 1-5.
 - **Gate Status:**
-  - `pytest -m 'not live'`: PASS (90 passed, 1 deselected in 12.97s)
+  - `pytest -m 'not live'`: PASS (92 passed, 1 deselected in 13.16s)
   - `python scripts/static_checks.py`: PASS (18 pass, 0 warn, 0 fail)
   - `ruff check .`: PASS (All checks passed)
 
@@ -205,8 +226,8 @@
 | 3 | Quote, Channel3 refresh, currency | MOCK PASS, LIVE NOT RUN | `docs/evidence/phaseB4_quotes_orders.txt` |
 | 4 | Quote, budget, confirm | MOCK PASS, LIVE NOT RUN | `docs/evidence/phaseB4_quotes_orders.txt` |
 | 5 | Confirm to order | MOCK PASS, LIVE NOT RUN | `docs/evidence/phaseB4_quotes_orders.txt` |
-| 6 | Order to PayPal payload | MOCK PASS, LIVE NOT RUN | `docs/evidence/phaseB4_quotes_orders.txt` |
-| 7 | Capture, verification, receipt | MOCK PASS, LIVE NOT RUN | `docs/evidence/phaseB4_quotes_orders.txt` |
+| 6 | Order to PayPal payload | LIVE PASS | `docs/LIVE_TEST_REPORT.md` |
+| 7 | Capture, verification, receipt | LIVE PASS | `docs/LIVE_TEST_REPORT.md` |
 | 8 | Session isolation | PASS | `docs/evidence/phaseB4_quotes_orders.txt` |
 | 9 | Rate limit | PASS | `docs/evidence/phaseB1_platform_core.txt` |
 | 10 | Frontend and API contract | PASS | `docs/evidence/phaseB5_frontend.txt` |

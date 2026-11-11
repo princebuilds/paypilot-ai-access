@@ -95,3 +95,23 @@ def test_paypal_create_order_payload_and_idempotency(test_setup, monkeypatch):
         assert row is not None
         assert row["step"] == "CREATE_ORDER"
         assert row["paypal_debug_id"] == "create_debug_999"
+
+
+def test_real_paypal_create_fixture_structure():
+    """Verify that the real, sanitized PayPal create fixture conforms to required schema."""
+    import json
+    from pathlib import Path
+
+    fixture_path = Path(__file__).resolve().parent.parent / "fixtures" / "paypal_create_real.json"
+    assert fixture_path.exists(), "paypal_create_real.json fixture must exist"
+
+    data = json.loads(fixture_path.read_text(encoding="utf-8"))
+    assert "id" in data
+    assert data.get("status") == "CREATED"
+    assert "purchase_units" in data
+    assert len(data["purchase_units"]) >= 1
+    pu = data["purchase_units"][0]
+    assert "amount" in pu
+    assert pu["amount"]["currency_code"] == "USD"
+    assert "custom_id" in pu
+

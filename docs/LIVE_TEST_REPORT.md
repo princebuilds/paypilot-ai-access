@@ -348,3 +348,32 @@ Status: NOT RUN (Will record real Channel3, Gemini, and PayPal Sandbox interacti
 - **Recommendations Survived Grounding:** 0
 - **No recommendations survived grounding.** (Safe rejection verified)
 
+
+## PayPal Sandbox Live Create-Order Run (2026-11-10T13:27:40.647592+00:00)
+- **Status:** PASS (HTTP 201 Created)
+- **Internal Order ID:** `smoke_20261110132737`
+- **PayPal Order ID:** `34P97588UX043433R`
+- **PayPal Debug ID:** `f326108f9bcb2`
+- **Total Amount:** `$39.99 USD`
+- **Verification:** Sandbox credentials accepted, plain amount payload verified, no money spent.
+
+## PayPal Sandbox Live Create-Order Run (2026-11-11T00:14:54.278123+00:00)
+- **Status:** PASS (HTTP 201 Created)
+- **Internal Order ID:** `smoke_20261111001451`
+- **PayPal Order ID:** `6NU86258GE7799518`
+- **PayPal Debug ID:** `f325048d8dd22`
+- **Total Amount:** `$39.99 USD`
+- **Verification:** Sandbox credentials accepted, plain amount payload verified, no money spent.
+
+## PayPal Sandbox Live Full Checkout & Capture Run (2026-11-11T09:14:58.836078+00:00)
+- **Status:** PASS (HTTP 201 Captured -> CAPTURED_VERIFIED)
+- **Internal Order ID:** `smoke_full_20261111081747`
+- **PayPal Order ID:** `3UW01444V17150529`
+- **Capture Debug ID:** `f3705970501bf`
+- **Capture ID:** `67554967LV746964H`
+- **Total Amount:** `$39.99 USD`
+- **Invariant 1 (Order COMPLETED):** PASS (`COMPLETED`)
+- **Invariant 2 (Capture COMPLETED):** PASS (`COMPLETED`)
+- **Invariant 3 (Amount/Currency Match):** PASS (`$39.99 USD`)
+- **Invariant 4 (custom_id Match):** PASS (`smoke_full_20261111081747`)
+- **Fixtures Saved:** `tests/fixtures/paypal_capture_real.json`

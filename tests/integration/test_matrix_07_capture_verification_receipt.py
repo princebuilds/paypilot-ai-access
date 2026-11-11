@@ -176,3 +176,42 @@ def test_capture_fails_on_amount_mismatch(test_setup, monkeypatch):
     assert res.status_code == 200
     data = res.json()
     assert data["status"] == "FAILED"
+
+
+def test_capture_verified_using_real_sandbox_fixture():
+    """Verify that the real, sanitized PayPal capture response fixture passes all 4 invariants."""
+    import json
+    from pathlib import Path
+
+    fixture_path = Path(__file__).resolve().parent.parent / "fixtures" / "paypal_capture_real.json"
+    assert fixture_path.exists(), "paypal_capture_real.json fixture must exist"
+
+    payload = json.loads(fixture_path.read_text(encoding="utf-8"))
+    pu = payload["purchase_units"][0]
+    expected_internal_id = pu.get("custom_id") or pu["payments"]["captures"][0]["custom_id"]
+    cap = pu["payments"]["captures"][0]
+    expected_total = cap["amount"]["value"]
+    expected_currency = cap["amount"]["currency_code"]
+
+    client = PayPalClient(settings=Settings(
+        OFFLINE_TESTS=1,
+        DATABASE_PATH=":memory:",
+        CHANNEL3_API_KEY="test",
+        GEMINI_API_KEY="test",
+        GEMINI_MODEL="test",
+        PAYPAL_CLIENT_ID="test",
+        PAYPAL_CLIENT_SECRET="test",
+    ))
+
+    v_status, cap_id, cap_val, cap_curr, msg = client.verify_capture(
+        internal_order_id=expected_internal_id,
+        expected_total=expected_total,
+        expected_currency=expected_currency,
+        paypal_payload=payload,
+    )
+
+    assert v_status == "CAPTURED_VERIFIED"
+    assert cap_id == cap["id"]
+    assert cap_val == expected_total
+    assert cap_curr == expected_currency
+

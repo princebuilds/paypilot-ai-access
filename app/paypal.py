@@ -218,7 +218,6 @@ class PayPalClient:
             return "FAILED", None, None, None, "Invalid payment response: missing purchase units."
 
         pu = purchase_units[0]
-        custom_id = pu.get("custom_id")
         payments = pu.get("payments") or {}
         captures = payments.get("captures") or []
 
@@ -229,6 +228,7 @@ class PayPalClient:
             return "FAILED", None, None, None, "No payment capture found in PayPal order."
 
         capture = captures[0]
+        custom_id = pu.get("custom_id") or capture.get("custom_id")
         capture_id = capture.get("id")
         capture_status = capture.get("status")
         amount_dict = capture.get("amount") or {}

@@ -1,0 +1,44 @@
+{
+  "id": "3UW01444V17150529",
+  "intent": "CAPTURE",
+  "status": "CREATED",
+  "purchase_units": [
+    {
+      "reference_id": "default",
+      "amount": {
+        "currency_code": "USD",
+        "value": "39.99",
+        "breakdown": {}
+      },
+      "payee": {
+        "email_address": "sb-vefxb53822941@business.example.com",
+        "merchant_id": "WKQ4QAEJTT484"
+      },
+      "description": "PayPilot AI ACCESS - Sandbox Demo Order",
+      "custom_id": "smoke_full_20261111081747"
+    }
+  ],
+  "create_time": "2026-11-11T08:17:49Z",
+  "links": [
+    {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/3UW01444V17150529",
+      "rel": "self",
+      "method": "GET"
+    },
+    {
+      "href": "https://www.sandbox.paypal.com/checkoutnow?token=3UW01444V17150529",
+      "rel": "approve",
+      "method": "GET"
+    },
+    {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/3UW01444V17150529",
+      "rel": "update",
+      "method": "PATCH"
+    },
+    {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/3UW01444V17150529/capture",
+      "rel": "capture",
+      "method": "POST"
+    }
+  ]
+}
