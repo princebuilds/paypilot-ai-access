@@ -76,6 +76,15 @@ CREATE TABLE IF NOT EXISTS payment_events (
   summary TEXT,
   created_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS grounding_runs (
+  id TEXT PRIMARY KEY,
+  search_id TEXT NOT NULL REFERENCES searches(id),
+  session_id TEXT NOT NULL,
+  kept_count INTEGER NOT NULL,
+  removed_count INTEGER NOT NULL,
+  created_at TEXT NOT NULL
+);
 """
 
 

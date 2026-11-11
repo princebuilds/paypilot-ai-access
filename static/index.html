@@ -114,6 +114,17 @@
         <p id="channel3-meta" class="meta-notice"></p>
       </div>
       <div id="products-list" class="products-grid" role="list"></div>
+      
+      <!-- What the assistant did panel -->
+      <div id="activity-panel" class="activity-panel" hidden>
+        <button type="button" id="activity-toggle-btn" class="activity-toggle-btn" aria-expanded="false" aria-controls="activity-content">
+          <span id="activity-toggle-icon" class="activity-toggle-icon" aria-hidden="true">▶</span>
+          <span class="activity-toggle-label">What the assistant did</span>
+        </button>
+        <div id="activity-content" class="activity-content" hidden>
+          <ol id="activity-timeline" class="activity-timeline" role="list"></ol>
+        </div>
+      </div>
     </section>
 
     <!-- Quote & Price Lock Section -->

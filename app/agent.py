@@ -317,6 +317,26 @@ class AgentService:
         )
         reply_text = build_safe_reply_text(summary, surviving_items, requested_query=message)
 
+        # Record grounding audit run for activity panel
+        try:
+            with get_db_connection(self.settings.DATABASE_PATH) as conn:
+                conn.execute(
+                    """
+                    INSERT INTO grounding_runs (id, search_id, session_id, kept_count, removed_count, created_at)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        f"gr_{uuid.uuid4().hex[:12]}",
+                        search_id,
+                        session_id,
+                        len(surviving_items),
+                        len(dropped_logs),
+                        datetime.now(timezone.utc).isoformat(),
+                    ),
+                )
+        except Exception as e:
+            logger.warning("Failed to record grounding_run: %s", e)
+
         return AgentResponse(
             search_id=search_id,
             reply_text=reply_text,

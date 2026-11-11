@@ -14,7 +14,7 @@ from app.errors import (
     unhandled_exception_handler,
     validation_error_handler,
 )
-from app.routers import agent, health, orders, quotes
+from app.routers import activity, agent, health, orders, quotes
 from app.security import SecurityHeadersMiddleware, SessionMiddleware
 
 
@@ -48,6 +48,7 @@ app.include_router(health.router, prefix="/api")
 app.include_router(agent.router, prefix="/api")
 app.include_router(quotes.router, prefix="/api")
 app.include_router(orders.router, prefix="/api")
+app.include_router(activity.router)
 
 # Static files mount
 static_dir = Path(__file__).resolve().parent.parent / "static"

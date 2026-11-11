@@ -48,6 +48,12 @@
   const paypalWrapperEl = document.getElementById("paypal-container-wrapper");
   const paypalButtonContainerEl = document.getElementById("paypal-button-container");
 
+  const activityPanelEl = document.getElementById("activity-panel");
+  const activityToggleBtnEl = document.getElementById("activity-toggle-btn");
+  const activityToggleIconEl = document.getElementById("activity-toggle-icon");
+  const activityContentEl = document.getElementById("activity-content");
+  const activityTimelineEl = document.getElementById("activity-timeline");
+
   // ==========================================================================
   // Assistant Speech & Announcer Utilities
   // ==========================================================================
@@ -255,6 +261,7 @@
 
       // Render recommendations
       renderRecommendations(recs, data.live_data);
+      loadActivityTimeline();
 
       const count = recs.length;
       const countMsg = "I found " + count + " options. Here is why each one may fit.";
@@ -450,6 +457,7 @@
 
       // Render Quote Details
       renderQuote(quote);
+      loadActivityTimeline();
 
       const quoteSpeech = quote.title + ", quantity " + quote.quantity + ". The total is $" + quote.total + (quote.budget ? ". Your budget is $" + quote.budget + "." : ".");
       updateAssistant(quoteSpeech, "Quote Locked", true);
@@ -533,6 +541,7 @@
       // Confirmed successfully! Prepare PayPal buttons
       if (confirmQuoteBtnEl) confirmQuoteBtnEl.hidden = true;
       if (paypalWrapperEl) paypalWrapperEl.hidden = false;
+      loadActivityTimeline();
 
       updateAssistant("PayPal will open. Approve there when you are ready.", "Ready for PayPal", true);
 
@@ -641,6 +650,78 @@
   }
 
   // ==========================================================================
+  // What The Assistant Did: Activity Panel Hydration (Server-side Stored Data)
+  // ==========================================================================
+
+  async function loadActivityTimeline() {
+    if (!activityPanelEl || !activityTimelineEl) return;
+    try {
+      const res = await fetch("/api/activity");
+      if (!res.ok) return;
+      const data = await res.json();
+      const events = data.events || [];
+      if (events.length === 0) {
+        activityPanelEl.hidden = true;
+        return;
+      }
+
+      while (activityTimelineEl.firstChild) {
+        activityTimelineEl.removeChild(activityTimelineEl.firstChild);
+      }
+
+      events.forEach((ev) => {
+        const item = document.createElement("li");
+        item.className = "activity-item";
+
+        const header = document.createElement("div");
+        header.className = "activity-item-header";
+
+        const title = document.createElement("span");
+        title.className = "activity-item-title";
+        title.textContent = ev.title || "Step";
+        header.appendChild(title);
+
+        if (ev.timestamp) {
+          const time = document.createElement("time");
+          time.className = "activity-item-time";
+          time.textContent = new Date(ev.timestamp).toLocaleTimeString();
+          header.appendChild(time);
+        }
+        item.appendChild(header);
+
+        const detail = document.createElement("p");
+        detail.className = "activity-item-detail";
+        detail.textContent = ev.detail || "";
+        item.appendChild(detail);
+
+        if (ev.source_table) {
+          const source = document.createElement("span");
+          source.className = "activity-item-source";
+          source.textContent = "Source: " + ev.source_table;
+          item.appendChild(source);
+        }
+
+        activityTimelineEl.appendChild(item);
+      });
+
+      activityPanelEl.hidden = false;
+    } catch (e) {
+      // Activity timeline is non-blocking
+    }
+  }
+
+  function setupActivityToggle() {
+    if (!activityToggleBtnEl || !activityContentEl || !activityToggleIconEl) return;
+    activityToggleBtnEl.addEventListener("click", () => {
+      const isExpanded = activityToggleBtnEl.getAttribute("aria-expanded") === "true";
+      const nextExpanded = !isExpanded;
+      activityToggleBtnEl.setAttribute("aria-expanded", nextExpanded ? "true" : "false");
+      activityContentEl.hidden = !nextExpanded;
+      activityToggleIconEl.textContent = nextExpanded ? "▼" : "▶";
+    });
+  }
+
+  // ==========================================================================
   // Event Listeners & Setup
   // ==========================================================================
 
@@ -648,7 +729,11 @@
     // 1. Initialize Speech Recognition
     initSpeechRecognition();
 
-    // 2. Pre-fetch client config and PayPal SDK asynchronously
+    // 2. Setup Activity Toggle and fetch initial timeline
+    setupActivityToggle();
+    loadActivityTimeline();
+
+    // 3. Pre-fetch client config and PayPal SDK asynchronously
     loadPayPalSdk();
 
     // 3. Search Form Submit
