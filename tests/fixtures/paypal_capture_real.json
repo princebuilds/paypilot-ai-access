@@ -3,12 +3,12 @@
   "status": "COMPLETED",
   "payment_source": {
     "paypal": {
-      "email_address": "sb-brokb53858327@personal.example.com",
-      "account_id": "G9DXLR5LVKHBY",
+      "email_address": "[REDACTED]",
+      "account_id": "[REDACTED]",
       "account_status": "VERIFIED",
       "name": {
-        "given_name": "John",
-        "surname": "Doe"
+        "given_name": "[REDACTED]",
+        "surname": "[REDACTED]"
       },
       "address": {
         "country_code": "US"
@@ -20,13 +20,13 @@
       "reference_id": "default",
       "shipping": {
         "name": {
-          "full_name": "John Doe"
+          "full_name": "[REDACTED]"
         },
         "address": {
-          "address_line_1": "2211 N First St",
-          "admin_area_2": "San Jose",
+          "address_line_1": "[REDACTED]",
+          "admin_area_2": "[REDACTED]",
           "admin_area_1": "CA",
-          "postal_code": "95131",
+          "postal_code": "[REDACTED]",
           "country_code": "US"
         }
       },
@@ -88,11 +88,11 @@
   ],
   "payer": {
     "name": {
-      "given_name": "John",
-      "surname": "Doe"
+      "given_name": "[REDACTED]",
+      "surname": "[REDACTED]"
     },
-    "email_address": "sb-brokb53858327@personal.example.com",
-    "payer_id": "G9DXLR5LVKHBY",
+    "email_address": "[REDACTED]",
+    "payer_id": "[REDACTED]",
     "address": {
       "country_code": "US"
     }

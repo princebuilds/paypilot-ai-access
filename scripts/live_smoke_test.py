@@ -21,12 +21,16 @@ from app.config import get_settings  # noqa: E402
 
 
 def sanitize_dict(obj):
-    """Recursively strip any API key or token strings from dictionaries."""
+    """Recursively strip any API key, token, payer name, email or address strings from dictionaries."""
     if isinstance(obj, dict):
         clean = {}
         for k, v in obj.items():
             k_lower = k.lower()
             if any(s in k_lower for s in ("api_key", "secret", "password", "auth", "x-api-key")) or k_lower in ("token", "access_token"):
+                clean[k] = "[REDACTED]"
+            elif k_lower in ("email_address", "email", "full_name", "given_name", "surname"):
+                clean[k] = "[REDACTED]"
+            elif k_lower in ("address_line_1", "address_line_2", "admin_area_2", "postal_code", "account_id", "merchant_id", "payer_id"):
                 clean[k] = "[REDACTED]"
             else:
                 clean[k] = sanitize_dict(v)

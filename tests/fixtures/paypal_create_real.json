@@ -11,8 +11,8 @@
         "breakdown": {}
       },
       "payee": {
-        "email_address": "sb-vefxb53822941@business.example.com",
-        "merchant_id": "WKQ4QAEJTT484"
+        "email_address": "[REDACTED]",
+        "merchant_id": "[REDACTED]"
       },
       "description": "PayPilot AI ACCESS - Sandbox Demo Order",
       "custom_id": "smoke_full_20261111081747"
