@@ -57,3 +57,17 @@ def test_receipt_page_contains_sandbox_honesty_and_no_dom_injection():
     assert "sandbox payment, no real purchase" in receipt_html.lower()
     assert "innerHTML" not in receipt_html
     assert "/api/orders/" in receipt_html
+
+
+def test_retailer_clarity_and_channel3_link_disclosure():
+    """Verify that product cards and receipt display 'Sold by <retailer>' and Channel3 link disclosure."""
+    app_js = (ROOT / "static" / "app.js").read_text(encoding="utf-8")
+    assert '"Sold by "' in app_js or "'Sold by '" in app_js, "app.js must render 'Sold by <retailer>'"
+    assert "Buy link opens the store through a Channel3 link" in app_js, (
+        "app.js must render Channel3 link disclosure note"
+    )
+
+    receipt_html = (ROOT / "static" / "receipt.html").read_text(encoding="utf-8")
+    assert "Sold by" in receipt_html, "receipt.html must have 'Sold by' table header"
+    assert "Channel3" in receipt_html, "receipt.html must disclose Channel3 link"
+

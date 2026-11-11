@@ -320,10 +320,32 @@
 
       const merchantEl = document.createElement("span");
       merchantEl.className = "product-merchant";
-      merchantEl.textContent = prod.merchant_domain || "channel3";
+      const retailerName = prod.merchant_domain || "retailer";
+      merchantEl.textContent = "Sold by " + retailerName;
       priceBar.appendChild(merchantEl);
 
       card.appendChild(priceBar);
+
+      // Retailer clarity & Channel3 outbound disclosure note
+      const retailerNoteWrap = document.createElement("div");
+      retailerNoteWrap.className = "retailer-attribution";
+
+      if (prod.buy_url) {
+        const storeLink = document.createElement("a");
+        storeLink.href = prod.buy_url;
+        storeLink.target = "_blank";
+        storeLink.rel = "noopener noreferrer";
+        storeLink.className = "store-outbound-link";
+        storeLink.textContent = "View on " + retailerName + " ↗";
+        retailerNoteWrap.appendChild(storeLink);
+      }
+
+      const channel3Note = document.createElement("p");
+      channel3Note.className = "channel3-note";
+      channel3Note.textContent = "Buy link opens the store through a Channel3 link.";
+      retailerNoteWrap.appendChild(channel3Note);
+
+      card.appendChild(retailerNoteWrap);
 
       // Reasons Box
       if (prod.reasons && prod.reasons.length > 0) {
