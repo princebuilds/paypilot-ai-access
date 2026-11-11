@@ -8,20 +8,20 @@ services:
     autoDeploy: false
     envVars:
       - key: PYTHON_VERSION
-        value: 3.13.15
+        value: 3.13.0
       - key: PAYPAL_ENV
         value: sandbox
       - key: OFFLINE_TESTS
         value: "0"
       - key: RATE_LIMIT_PER_HOUR
-        value: "30"
+        value: "120"
       - key: DAILY_SEARCH_CAP
         value: "1500"
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash-lite
       - key: CHANNEL3_API_KEY
         sync: false
       - key: GEMINI_API_KEY
-        sync: false
-      - key: GEMINI_MODEL
         sync: false
       - key: PAYPAL_CLIENT_ID
         sync: false

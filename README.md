@@ -76,6 +76,18 @@ flowchart TD
    ```
 8. Open your browser at `http://127.0.0.1:8000`.
 
+### Deploying to Render (Blueprint)
+The repository includes a validated [`render.yaml`](render.yaml) blueprint for one-click deployment:
+1. In your [Render Dashboard](https://dashboard.render.com), click **New +** &rarr; **Blueprint**.
+2. Select your repository: `princebuilds/paypilot-ai-access`.
+3. Render automatically loads configuration from `render.yaml` and prompts for the required secret values:
+   - `CHANNEL3_API_KEY`
+   - `GEMINI_API_KEY`
+   - `PAYPAL_CLIENT_ID`
+   - `PAYPAL_CLIENT_SECRET`
+4. Click **Apply**. Render installs requirements, launches `uvicorn`, and monitors health via `GET /api/health`.
+5. Rate limits on Render are pre-configured to `120` requests/hour per IP so judges can freely evaluate the demo without experiencing rate-limit throttling.
+
 ## Configuration
 | Environment Variable | Description | Default |
 |---|---|---|
@@ -109,6 +121,7 @@ flowchart TD
 - `POST /api/orders/{id}/capture`: Server-side capture and verification.
 - `POST /api/orders/{id}/cancel`: Buyer cancellation recording.
 - `GET /api/orders/{id}`: Receipt retrieval.
+- `GET /api/activity`: Server-side activity event timeline for session or order.
 - `GET /api/health`: Operational health check (booleans only).
 
 ## Project Layout
@@ -124,9 +137,10 @@ app/
   channel3.py      Channel3 HTTPX client and offer parser
   agent.py         Gemini function-calling loop
   grounding.py     Product fact and evidence validator
+  activity.py      Server-side activity event timeline generator
   quotes.py        Price locking, budget enforcement, and expiry
   paypal.py        PayPal OAuth, order creation, and capture verification
-  routers/         agent.py, quotes.py, orders.py, health.py
+  routers/         activity.py, agent.py, quotes.py, orders.py, health.py
 static/            Accessible UI (HTML, CSS, JS)
 tests/             unit/, integration/, live/, fixtures/
 scripts/           static_checks.py, live_smoke_test.py
