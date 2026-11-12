@@ -41,6 +41,7 @@ class Settings(BaseSettings):
     RATE_LIMIT_PER_HOUR: int = Field(default=30)
     DAILY_SEARCH_CAP: int = Field(default=1500)
     DATABASE_PATH: str = Field(default="paypilot.db")
+    PORT: int = Field(default=8000)
 
     def validate_for_startup(self) -> None:
         """Validate critical configuration; fail fast naming missing keys only."""

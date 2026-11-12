@@ -84,3 +84,22 @@ def test_config_rejects_non_sandbox_paypal_env():
     with pytest.raises(RuntimeError) as exc_info:
         settings.validate_for_startup()
     assert "sandbox" in str(exc_info.value).lower()
+
+
+def test_config_loads_from_pure_env_without_dotenv_and_reads_port(monkeypatch):
+    """Confirm app starts with only environment variables (no .env file) and reads $PORT."""
+    monkeypatch.setenv("CHANNEL3_API_KEY", "ch3-valid-test-key")
+    monkeypatch.setenv("GEMINI_API_KEY", "gemini-valid-test-key")
+    monkeypatch.setenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
+    monkeypatch.setenv("PAYPAL_CLIENT_ID", "paypal-valid-client-id")
+    monkeypatch.setenv("PAYPAL_CLIENT_SECRET", "paypal-valid-secret")
+    monkeypatch.setenv("PORT", "10000")
+
+    # Explicitly instantiate without reading any .env file
+    settings = Settings(_env_file=None)
+    settings.validate_for_startup()
+
+    assert settings.PORT == 10000
+    assert settings.CHANNEL3_API_KEY == "ch3-valid-test-key"
+    assert settings.PAYPAL_ENV == "sandbox"
+
