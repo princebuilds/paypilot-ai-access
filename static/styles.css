@@ -37,6 +37,10 @@
   outline-offset: 3px !important;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 /* Skip link (Accessible bypass block) */
 .skip-link {
   position: absolute;

@@ -2,7 +2,7 @@
 from functools import lru_cache
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PLACEHOLDER_TOKENS = ("_here", "placeholder", "actual")
@@ -42,6 +42,21 @@ class Settings(BaseSettings):
     DAILY_SEARCH_CAP: int = Field(default=1500)
     DATABASE_PATH: str = Field(default="paypilot.db")
     PORT: int = Field(default=8000)
+
+    @field_validator(
+        "CHANNEL3_API_KEY",
+        "GEMINI_API_KEY",
+        "GEMINI_MODEL",
+        "PAYPAL_CLIENT_ID",
+        "PAYPAL_CLIENT_SECRET",
+        "PAYPAL_ENV",
+        mode="before",
+    )
+    @classmethod
+    def strip_whitespace(cls, v: Optional[str]) -> Optional[str]:
+        if isinstance(v, str):
+            return v.strip()
+        return v
 
     def validate_for_startup(self) -> None:
         """Validate critical configuration; fail fast naming missing keys only."""

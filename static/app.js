@@ -159,37 +159,51 @@
   // Dynamic PayPal SDK Initialization
   // ==========================================================================
 
+  let paypalSdkLoadingPromise = null;
+
   async function loadPayPalSdk() {
-    if (state.paypalSdkLoaded || window.paypal) {
+    if (state.paypalSdkLoaded || (window.paypal && window.paypal.Buttons)) {
       state.paypalSdkLoaded = true;
       return true;
     }
-
-    try {
-      const res = await fetch("/api/config");
-      if (!res.ok) {
-        return false;
-      }
-      const cfg = await res.json();
-      if (!cfg.paypal_client_id) {
-        return false;
-      }
-
-      return new Promise((resolve) => {
-        const script = document.createElement("script");
-        script.src = "https://www.paypal.com/sdk/js?client-id=" + encodeURIComponent(cfg.paypal_client_id) + "&currency=USD&intent=capture&components=buttons";
-        script.onload = () => {
-          state.paypalSdkLoaded = true;
-          resolve(true);
-        };
-        script.onerror = () => {
-          resolve(false);
-        };
-        document.head.appendChild(script);
-      });
-    } catch (e) {
-      return false;
+    if (paypalSdkLoadingPromise) {
+      return paypalSdkLoadingPromise;
     }
+
+    paypalSdkLoadingPromise = (async () => {
+      try {
+        const res = await fetch("/api/config");
+        if (!res.ok) {
+          paypalSdkLoadingPromise = null;
+          return false;
+        }
+        const cfg = await res.json();
+        const rawClientId = cfg.paypal_client_id ? String(cfg.paypal_client_id).trim() : "";
+        if (!rawClientId) {
+          paypalSdkLoadingPromise = null;
+          return false;
+        }
+
+        return new Promise((resolve) => {
+          const script = document.createElement("script");
+          script.src = "https://www.paypal.com/sdk/js?client-id=" + encodeURIComponent(rawClientId) + "&currency=USD&intent=capture&components=buttons";
+          script.onload = () => {
+            state.paypalSdkLoaded = true;
+            resolve(true);
+          };
+          script.onerror = () => {
+            paypalSdkLoadingPromise = null;
+            resolve(false);
+          };
+          document.head.appendChild(script);
+        });
+      } catch (e) {
+        paypalSdkLoadingPromise = null;
+        return false;
+      }
+    })();
+
+    return paypalSdkLoadingPromise;
   }
 
   // ==========================================================================
@@ -567,86 +581,101 @@
 
     const loaded = await loadPayPalSdk();
     if (!loaded || !window.paypal || !window.paypal.Buttons) {
+      const errNotice = document.createElement("p");
+      errNotice.className = "error-text";
+      errNotice.textContent = "PayPal Sandbox SDK could not load. Please check your network connection or reload.";
+      paypalButtonContainerEl.appendChild(errNotice);
       updateAssistant("PayPal Sandbox SDK could not load. Please check your network or credentials.", "PayPal Error", true, true);
       return;
     }
 
-    window.paypal.Buttons({
-      style: {
-        layout: "vertical",
-        color: "gold",
-        shape: "rect",
-        label: "paypal",
-      },
+    try {
+      await window.paypal.Buttons({
+        style: {
+          layout: "vertical",
+          color: "gold",
+          shape: "rect",
+          label: "paypal",
+        },
 
-      // 1. Create Order: Server receives ONLY quote_id (browser never sends amounts)
-      createOrder: async () => {
-        try {
-          const res = await fetch("/api/orders", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ quote_id: state.currentQuote.quote_id }),
-          });
+        // 1. Create Order: Server receives ONLY quote_id (browser never sends amounts)
+        createOrder: async () => {
+          try {
+            const res = await fetch("/api/orders", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ quote_id: state.currentQuote.quote_id }),
+            });
 
-          if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            throw new Error(err.error ? err.error.message : "Failed to create PayPal order.");
+            if (!res.ok) {
+              const err = await res.json().catch(() => ({}));
+              throw new Error(err.error ? err.error.message : "Failed to create PayPal order.");
+            }
+
+            const orderData = await res.json();
+            state.currentOrder = orderData;
+            return orderData.paypal_order_id;
+          } catch (e) {
+            updateAssistant("Could not create PayPal order: " + e.message, "Order Creation Error", true, true);
+            throw e;
           }
+        },
 
-          const orderData = await res.json();
-          state.currentOrder = orderData;
-          return orderData.paypal_order_id;
-        } catch (e) {
-          updateAssistant("Could not create PayPal order: " + e.message, "Order Creation Error", true, true);
-          throw e;
-        }
-      },
+        // 2. On Approve: Capture server-side and verify invariants
+        onApprove: async (data) => {
+          updateAssistant("Verifying Sandbox payment with server...", "Verifying", true);
 
-      // 2. On Approve: Capture server-side and verify invariants
-      onApprove: async (data) => {
-        updateAssistant("Verifying Sandbox payment with server...", "Verifying", true);
+          try {
+            const orderId = state.currentOrder ? state.currentOrder.order_id : null;
+            if (!orderId) {
+              throw new Error("Missing internal order reference.");
+            }
 
-        try {
-          const orderId = state.currentOrder ? state.currentOrder.order_id : null;
-          if (!orderId) {
-            throw new Error("Missing internal order reference.");
+            const res = await fetch("/api/orders/" + encodeURIComponent(orderId) + "/capture", {
+              method: "POST",
+            });
+
+            const captureData = await res.json();
+
+            if (captureData.status === "CAPTURED_VERIFIED") {
+              const successMsg = "Payment verified. This was a Sandbox test, so no real money moved and no order was placed with the store.";
+              updateAssistant(successMsg, "Verified", true);
+              setTimeout(() => {
+                window.location.href = captureData.receipt_url || ("/receipt.html?order=" + encodeURIComponent(orderId));
+              }, 1200);
+            } else if (captureData.status === "PENDING") {
+              updateAssistant("PayPal says this payment is still pending. Do not treat it as paid.", "Pending", true);
+            } else {
+              updateAssistant("The payment did not go through. You were not charged.", "Payment Failed", true, true);
+            }
+          } catch (e) {
+            updateAssistant("Verification error: " + e.message, "Verification Failed", true, true);
           }
+        },
 
-          const res = await fetch("/api/orders/" + encodeURIComponent(orderId) + "/capture", {
-            method: "POST",
-          });
-
-          const captureData = await res.json();
-
-          if (captureData.status === "CAPTURED_VERIFIED") {
-            const successMsg = "Payment verified. This was a Sandbox test, so no real money moved and no order was placed with the store.";
-            updateAssistant(successMsg, "Verified", true);
-            setTimeout(() => {
-              window.location.href = captureData.receipt_url || ("/receipt.html?order=" + encodeURIComponent(orderId));
-            }, 1200);
-          } else if (captureData.status === "PENDING") {
-            updateAssistant("PayPal says this payment is still pending. Do not treat it as paid.", "Pending", true);
-          } else {
-            updateAssistant("The payment did not go through. You were not charged.", "Payment Failed", true, true);
+        // 3. On Cancel: Notify server and inform user
+        onCancel: async () => {
+          if (state.currentOrder && state.currentOrder.order_id) {
+            fetch("/api/orders/" + encodeURIComponent(state.currentOrder.order_id) + "/cancel", { method: "POST" });
           }
-        } catch (e) {
-          updateAssistant("Verification error: " + e.message, "Verification Failed", true, true);
-        }
-      },
+          updateAssistant("You cancelled. Nothing was charged.", "Cancelled", true);
+        },
 
-      // 3. On Cancel: Notify server and inform user
-      onCancel: async () => {
-        if (state.currentOrder && state.currentOrder.order_id) {
-          fetch("/api/orders/" + encodeURIComponent(state.currentOrder.order_id) + "/cancel", { method: "POST" });
-        }
-        updateAssistant("You cancelled. Nothing was charged.", "Cancelled", true);
-      },
-
-      // 4. On Error: Leave quote usable and show plain-language error
-      onError: (err) => {
-        updateAssistant("Payment error occurred in PayPal Sandbox. Your quote is still valid.", "PayPal Error", true, true);
-      },
-    }).render("#paypal-button-container");
+        // 4. On Error: Leave quote usable and show plain-language error
+        onError: (err) => {
+          updateAssistant("Payment error occurred in PayPal Sandbox. Your quote is still valid.", "PayPal Error", true, true);
+        },
+      }).render("#paypal-button-container");
+    } catch (renderErr) {
+      while (paypalButtonContainerEl.firstChild) {
+        paypalButtonContainerEl.removeChild(paypalButtonContainerEl.firstChild);
+      }
+      const errNotice = document.createElement("p");
+      errNotice.className = "error-text";
+      errNotice.textContent = "PayPal buttons could not be displayed. Please try confirming again.";
+      paypalButtonContainerEl.appendChild(errNotice);
+      updateAssistant("Could not display PayPal buttons. Please try again.", "PayPal Error", true, true);
+    }
   }
 
   // ==========================================================================
