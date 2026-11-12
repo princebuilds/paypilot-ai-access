@@ -109,7 +109,8 @@ Setup in 8 simple steps:
    ```
 5. **Run the static verification gate:**
    ```powershell
-   python scripts/static_checks.py
+   python -X utf8 scripts/static_checks.py
+   # Note: -X utf8 is needed on Windows so Python uses UTF-8 to decode emojis in git history
    ```
 6. **Run the automated test suite:**
    ```powershell
