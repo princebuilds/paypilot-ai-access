@@ -224,8 +224,12 @@
 - Gate status: **GREEN** (pytest: 97 passed, 1 deselected; static_checks: 18 pass, 0 fail; ruff: clean; CI: green on commit `926684d`).
 
 ## Current Status
-- **Current Phase:** Feature 2 & Render Deploy Prep Complete.
-- **Awaiting:** User confirmation of hosted deployment / in-app purchase flow before resuming Features 3 (Price range), 4 (See more options), and 5 (Discounts).
+- **Current Phase:** Final Submission Mode (Features 3–5 cancelled per deadline instruction).
+- **Completed Documentation & Submission Artifacts:**
+  - `README.md` updated with Judge Quick-Start, What to look for checklist, Live vs Mock table, Limitations, Security, Git history development timeline, and Future work.
+  - `docs/DEVPOST.md` authored with project description, tooling breakdown, technical challenges overcome, and accomplishments.
+  - `docs/DEMO_SCRIPT.md` authored with shot-by-shot timeline under 2:50 (honest no-match, over-budget, verified receipt, activity panel, Sandbox disclaimer).
+  - `docs/SUBMISSION_CHECKLIST.md` authored with deadline tracking and Devpost form verification items.
 - **Gate Status:**
   - `pytest -m 'not live'`: PASS (97 passed, 1 deselected)
   - `python scripts/static_checks.py`: PASS (18 pass, 0 warn, 0 fail)
