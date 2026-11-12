@@ -11,7 +11,7 @@
 
 Welcome, Hackathon Judges! PayPilot AI ACCESS is pre-configured and ready to evaluate.
 
-- **Hosted URL:** `https://your-hosted-app.onrender.com` *(Placeholder: project owner will update with live Render URL)*
+- **Hosted URL:** `https://paypilot-ai-access.onrender.com`
 - **Dedicated Sandbox Buyer Login:**
   - **Email:** `sb-buyer-example@personal.example.com` *(Placeholder: project owner will update with active credentials)*
   - **Password:** `your_sandbox_password` *(Placeholder)*
